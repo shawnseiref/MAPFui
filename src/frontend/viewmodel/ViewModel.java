@@ -51,16 +51,18 @@ public class ViewModel extends Observable implements Observer {
         return model.getGame(type);
     }
 
-    public void createFiles(String dirName){
+    public void createFiles(String dirName) throws Exception {
         createDir(dirName);
         String mapStr=model.getMapStr();
         String agentsStr=model.getScensStr(dirName);
         File mapFile= new File("Created Files/"+dirName+"/"+dirName+".map");
-        createFile(mapFile);
+        mapFile.createNewFile();
         writeToFile(mapFile,mapStr);
-        File agentsFile= new File("Created Files/"+dirName+"/"+dirName+".scen");
-        createFile(agentsFile);
-        writeToFile(agentsFile,agentsStr);
+        if(model.getGame(IModel.Type.CREATE).getAgentsList().size()>0){
+            File agentsFile= new File("Created Files/"+dirName+"/"+dirName+".scen");
+            agentsFile.createNewFile();
+            writeToFile(agentsFile,agentsStr);
+        }
         setChanged();
         notifyObservers();
     }
@@ -76,18 +78,7 @@ public class ViewModel extends Observable implements Observer {
         }
     }
 
-    private void createFile(File file) {
-        if (!file.exists()) {
-            try{
-                file.createNewFile();
-            }
-            catch(IOException se){
-            }
-        }
-    }
-
-
-    private void createDir(String dirName) {
+    private void createDir(String dirName) throws Exception {
         File theDir = new File("Created Files/"+dirName);
         if (!theDir.exists()) {
             try{
@@ -95,6 +86,9 @@ public class ViewModel extends Observable implements Observer {
             }
             catch(SecurityException se){
             }
+        }
+        else {
+            throw new Exception();
         }
     }
 }

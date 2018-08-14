@@ -36,13 +36,15 @@ public class ViewController implements Observer,IView, Initializable {
     public SubScenDisplayer subSceneDisplayer;
     public javafx.scene.control.ScrollPane scroll;
     public javafx.scene.control.MenuBar menu;
-    public javafx.scene.layout.VBox VB;
+    public javafx.scene.layout.VBox controlVbox;
+    public javafx.scene.layout.VBox createVbox;
     public javafx.scene.control.TabPane tab;
     public javafx.scene.control.TextField startRow;
     public javafx.scene.control.TextField startCol;
     public javafx.scene.control.TextField goalRow;
     public javafx.scene.control.TextField goalCol;
-    public javafx.scene.control.Button createAgent;
+    public javafx.scene.control.TextField fileName;
+    public javafx.scene.control.Button  solBut;
     public javafx.scene.image.ImageView backward;
     public javafx.scene.image.ImageView pause;
     public javafx.scene.image.ImageView play;
@@ -91,38 +93,32 @@ public class ViewController implements Observer,IView, Initializable {
     }
 
     public void loadSol(ActionEvent event){
-        File file=loadFile("Created Files");
+        File file=loadMapFile("");
         viewModel.loadSol(file);
+        controlVbox.setVisible(true);
         event.consume();
     }
 
     public void loadMap(ActionEvent event){
-        File file=loadFile("Created Files");
+        String path="";
+        IModel.Type current=subSceneDisplayer.getCurrentType();
+        if(current == IModel.Type.SIMULATE)
+            path="Created Files";
+        else
+            path="SavedMaps";
+        File file=loadMapFile(path);
         if (file != null) {
-            viewModel.loadMap(file, IModel.Type.SIMULATE);
+            viewModel.loadMap(file, current);
         }
         redraw();
-        event.consume();
-    }
-    public void loadNew(ActionEvent event){
-        String userDir = System.getProperty("user.home");
-        File file=loadFile(userDir+"/Desktop");
-        if (file != null) {
-            viewModel.loadMap(file, IModel.Type.CREATE);
-        }
+        if(subSceneDisplayer.getCurrentType()== IModel.Type.CREATE && viewModel.getGame(IModel.Type.CREATE)!=null)
+            createVbox.setVisible(true);
+        else if (subSceneDisplayer.getCurrentType()== IModel.Type.SIMULATE && viewModel.getGame(IModel.Type.SIMULATE)!=null)
+            solBut.setVisible(true);
         event.consume();
     }
 
-    public void loadExist(ActionEvent event){
-        File file=loadFile("SavedMaps");
-        if (file != null) {
-            viewModel.loadMap(file, IModel.Type.CREATE);
-        }
-        redraw();
-        event.consume();
-    }
-
-    private File loadFile(String location) {
+    private File loadMapFile(String location) {
         FileChooser fc = new FileChooser();
         fc.setTitle("Load Map");
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("map files", "*.map"));
@@ -142,6 +138,9 @@ public class ViewController implements Observer,IView, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        createVbox.setVisible(false);
+        controlVbox.setVisible(false);
+        solBut.setVisible(false);
         backward.setImage(new Image(this.getClass().getResourceAsStream("/Images/backwards.png")));
         pause.setImage(new Image(this.getClass().getResourceAsStream("/Images/pause.png")));
         play.setImage(new Image(this.getClass().getResourceAsStream("/Images/play.png")));
@@ -164,10 +163,13 @@ public class ViewController implements Observer,IView, Initializable {
         event.consume();
     }
 
-    public void createFiles(ActionEvent event){
-        String name="Check";
-        //stuff
-        viewModel.createFiles(name);
+    public void save(ActionEvent event) throws Exception {
+        try{
+            viewModel.createFiles(fileName.getText());
+        }
+        catch (Exception e){
+            showAlert("Please choose a different name");
+        }
         event.consume();
     }
 

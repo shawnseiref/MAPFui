@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import frontend.view.SubScenDisplayer?>
-<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -14,6 +13,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -29,24 +29,8 @@
                     <content>
                         <BorderPane fx:id="pane" prefHeight="392.0" prefWidth="600.0" style="-fx-background-color: bisque;">
                             <left>
-                                <VBox prefHeight="320.0" prefWidth="264.0" BorderPane.alignment="CENTER">
+                                <VBox fx:id="createVbox" prefHeight="320.0" prefWidth="264.0" BorderPane.alignment="CENTER">
                                     <children>
-                                        <MenuButton alignment="CENTER" mnemonicParsing="false" prefHeight="31.0" prefWidth="285.0" text="New Map">
-                                            <items>
-                                                <MenuItem mnemonicParsing="false" onAction="#loadExist" text="Existing maps" />
-                                                <!--<Menu mnemonicParsing="false" text="Existing maps">-->
-                                                <!--<items>-->
-                                                <!--<MenuItem mnemonicParsing="false" text="Map1" />-->
-                                                <!--<MenuItem mnemonicParsing="false" text="Map2" />-->
-                                                <!--<MenuItem mnemonicParsing="false" text="Map3" />-->
-                                                <!--<MenuItem mnemonicParsing="false" text="Map4" />-->
-                                                <!--<MenuItem mnemonicParsing="false" text="Map5" />-->
-                                                <!--</items>-->
-                                                <!--</Menu>-->
-                                                <MenuItem mnemonicParsing="false" onAction="#loadNew" text="Load map" />
-                                                <MenuItem mnemonicParsing="false" text="Random map" />
-                                            </items>
-                                        </MenuButton>
                                         <GridPane prefHeight="109.0" prefWidth="264.0">
                                             <columnConstraints>
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="229.0" minWidth="10.0" prefWidth="139.0" />
@@ -62,12 +46,13 @@
                                             <children>
                                                 <Label prefHeight="21.0" prefWidth="143.0" text="Agent start position:" />
                                                 <Label prefHeight="21.0" prefWidth="149.0" text="Agent goal position:" GridPane.rowIndex="1" />
-                                                <Button fx:id="createAgent" mnemonicParsing="false" onAction="#addAgent" prefHeight="31.0" prefWidth="273.0" text="Create Agent" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                                <Button mnemonicParsing="false" onAction="#addAgent" prefHeight="31.0" prefWidth="273.0" text="Create Agent" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                                                 <TextField fx:id="startRow" prefHeight="31.0" prefWidth="84.0" promptText="Row" GridPane.columnIndex="1" />
                                                 <TextField fx:id="goalRow" prefHeight="31.0" prefWidth="65.0" promptText="Row" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                 <TextField fx:id="startCol" promptText="Column" GridPane.columnIndex="2" />
                                                 <TextField fx:id="goalCol" promptText="Column" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <Button mnemonicParsing="false" onAction="#createFiles" prefHeight="31.0" prefWidth="273.0" text="Create Files!" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+                                    <Button mnemonicParsing="false" onAction="#save" prefHeight="31.0" prefWidth="154.0" text="Save" GridPane.rowIndex="3" />
+                                    <TextField fx:id="fileName" alignment="CENTER" promptText="File Name" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                                             </children>
                                         </GridPane>
                                     </children>
@@ -76,6 +61,14 @@
                             <bottom>
                                 <HBox prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
                             </bottom>
+                     <top>
+                                  <MenuButton alignment="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="266.0" text="New Map" BorderPane.alignment="CENTER">
+                                      <items>
+                                          <MenuItem mnemonicParsing="false" onAction="#loadMap" text="Load map" />
+                                          <MenuItem mnemonicParsing="false" text="Random map" />
+                                      </items>
+                                  </MenuButton>
+                     </top>
                         </BorderPane>
                     </content>
                 </Tab>
@@ -83,10 +76,8 @@
                     <content>
                         <BorderPane fx:id="pane1" prefHeight="392.0" prefWidth="600.0" style="-fx-background-color: bisque;">
                             <left>
-                                <VBox fx:id="VB" prefHeight="421.0" prefWidth="265.0" BorderPane.alignment="CENTER">
+                                <VBox fx:id="controlVbox" prefHeight="310.0" prefWidth="265.0" BorderPane.alignment="CENTER">
                                     <children>
-                                        <Button mnemonicParsing="false" onAction="#loadMap" prefHeight="31.0" prefWidth="323.0" text="Upload Map" />
-                                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loadSol" prefHeight="31.0" prefWidth="323.0" text="Upload Solution" />
                                         <GridPane prefHeight="56.0" prefWidth="241.0">
                                             <columnConstraints>
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="143.0" minWidth="10.0" prefWidth="82.0" />
@@ -102,7 +93,7 @@
                                             <children>
                                                 <ImageView fx:id="backward" fitHeight="27.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
                                                 <ImageView fx:id="pause" fitHeight="41.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
-                                                <ImageView fx:id="play" fitHeight="30.0" fitWidth="40.0" onMouseClicked="#loadNew" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" />
+                                                <ImageView fx:id="play" fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" />
                                                 <ImageView fx:id="forward" fitHeight="29.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" />
                                                 <Label prefHeight="21.0" prefWidth="82.0" text="Controls:" />
                                                 <Label prefHeight="21.0" prefWidth="107.0" text="Play speed:" GridPane.rowIndex="1" />
@@ -115,13 +106,14 @@
                             <bottom>
                                 <HBox prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
                             </bottom>
-                            <center>
-                                <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                                    <content>
-                                        <Canvas fx:id="subSceneDisplayer1" height="587.0" width="628.0" />
-                                    </content>
-                                </ScrollPane>
-                            </center>
+                     <top>
+                        <AnchorPane prefHeight="80.0" prefWidth="268.0" BorderPane.alignment="CENTER">
+                           <children>
+                                        <Button layoutX="1.0" mnemonicParsing="false" onAction="#loadMap" prefHeight="40.0" prefWidth="267.0" text="Upload Map" />
+                                        <Button fx:id="solBut" layoutY="40.0" mnemonicParsing="false" onAction="#loadSol" prefHeight="41.0" prefWidth="268.0" text="Upload Solution" />
+                           </children>
+                        </AnchorPane>
+                     </top>
                         </BorderPane>
                     </content>
                 </Tab>

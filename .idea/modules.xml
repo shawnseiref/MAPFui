@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MAPFUI.iml" filepath="$PROJECT_DIR$/MAPFUI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MAPFuiFix.iml" filepath="$PROJECT_DIR$/MAPFuiFix.iml" />
     </modules>
   </component>
 </project>

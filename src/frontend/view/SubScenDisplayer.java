@@ -60,7 +60,7 @@ public class SubScenDisplayer extends Canvas {
         if(game==null)
             getGraphicsContext2D().clearRect(0, 0, getWidth(), getHeight());
         else if (game.getMap()!= null && game.getMap().getGrid()!=null) {
-            double cellHeight =5;
+            double cellHeight = 5;
             double cellWidth = 5;
             setHeight(cellHeight*game.getMap().getGrid().length);
             setWidth(cellWidth*game.getMap().getGrid()[0].length);
