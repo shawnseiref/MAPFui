@@ -19,25 +19,7 @@ public class RandomMapGenerator extends AMapGenerator {
 
     @Override
     public Map generate(Object o) {
-        String mapStr="";
-        if(o instanceof String )
-            mapStr=((String )o);
-        else
-            return null;
-        int i=0;
-        int height = 0;
-        int width = 0;
-        int obstacleProbability;
-        String num ="";
-        while (i<mapStr.length()) {
-            while (mapStr.charAt(i) != ',') {
-                num = num + mapStr.charAt(i);
-            }
-            if (height==0){
-                int x=0;
-            }
-            // height =
-        }
+
         return map;
     }
 }

@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4e709b1d-1abd-407f-877e-39f1b15ad7a4" name="Default" comment="">
       <change beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/backEnd/MapGenerators/RandomMapGenerator.java" />
-      <change beforePath="$PROJECT_DIR$/src/backEnd/MapGenerators/StringMapGenerator.java" afterPath="$PROJECT_DIR$/src/backEnd/MapGenerators/StringMapGenerator.java" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/view/ViewController.java" afterPath="$PROJECT_DIR$/src/frontend/view/ViewController.java" />
+      <change beforePath="$PROJECT_DIR$/src/backEnd/MapGenerators/RandomMapGenerator.java" afterPath="$PROJECT_DIR$/src/backEnd/MapGenerators/RandomMapGenerator.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -43,8 +41,8 @@
       <file leaf-file-name="RandomMapGenerator.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/backEnd/MapGenerators/RandomMapGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+            <state relative-caret-position="208">
+              <caret line="21" column="6" lean-forward="false" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -100,9 +98,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/backEnd/MapGenerators/RandomMapGenerator.java" />
         <option value="$PROJECT_DIR$/src/backEnd/MapGenerators/StringMapGenerator.java" />
         <option value="$PROJECT_DIR$/src/frontend/view/ViewController.java" />
+        <option value="$PROJECT_DIR$/src/backEnd/MapGenerators/RandomMapGenerator.java" />
       </list>
     </option>
   </component>
@@ -317,12 +315,20 @@
       <option name="presentableId" value="Default" />
       <updated>1534335843611</updated>
       <workItem from="1534335845051" duration="1221000" />
-      <workItem from="1534674860876" duration="1111000" />
+      <workItem from="1534674860876" duration="1177000" />
     </task>
+    <task id="LOCAL-00001" summary="RandomMapGenerator (not writen)">
+      <created>1534676024855</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1534676024855</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2332000" />
+    <option name="totallyTimeSpent" value="2398000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -389,6 +395,10 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="RandomMapGenerator (not writen)" />
+    <option name="LAST_COMMIT_MESSAGE" value="RandomMapGenerator (not writen)" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
@@ -432,14 +442,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frontend/view/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="23" column="21" lean-forward="false" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/frontend/view/SubScenDisplayer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -464,10 +466,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/frontend/view/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="23" column="21" lean-forward="false" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/backEnd/MapGenerators/RandomMapGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        <state relative-caret-position="208">
+          <caret line="21" column="6" lean-forward="false" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
           <folding />
         </state>
       </provider>
