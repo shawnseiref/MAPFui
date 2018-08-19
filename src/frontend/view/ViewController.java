@@ -180,40 +180,40 @@ public class ViewController implements Observer,IView, Initializable {
         }
     }
 
-//    public void setResizeEvent(Scene scene) {
-//        scene.widthProperty().addListener(new ChangeListener<Number>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-//                Scale newScale = new Scale();
-////                if(newSceneWidth.doubleValue()>tab.widthProperty().doubleValue())
-////                    scroll.setPrefWidth(newSceneWidth.doubleValue()-tab.widthProperty().doubleValue());
+    public void setResizeEvent(Scene scene) {
+        scene.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+                Scale newScale = new Scale();
+//                if(newSceneWidth.doubleValue()>tab.widthProperty().doubleValue())
+//                    scroll.setPrefWidth(newSceneWidth.doubleValue()-tab.widthProperty().doubleValue());
 //                double old=oldSceneWidth.doubleValue()-VB.getWidth();
 //                double neww=newSceneWidth.doubleValue()-VB.getWidth();
-//                if(subSceneDisplayer!=null){
-////                    subSceneDisplayer.setWidth(subSceneDisplayer.getWidth()+newSceneWidth.doubleValue()-oldSceneWidth.doubleValue());
-////                    newScale.setPivotX(subSceneDisplayer.getLayoutX() *(neww)/(old));
-////                    newScale.setX( subSceneDisplayer.getScaleX() * (neww)/(old) );
-////                    subSceneDisplayer.getTransforms().add(newScale);
-//                }
-//            }
-//        });
-//        scene.heightProperty().addListener(new ChangeListener<Number>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-////                if(newSceneHeight.doubleValue()>tab.heightProperty().doubleValue())
-////                    scroll.setPrefHeight(newSceneHeight.doubleValue()-tab.heightProperty().doubleValue());
-//                Scale newScale = new Scale();
-//                double old=oldSceneHeight.doubleValue()-menu.getHeight();
-//                double neww=newSceneHeight.doubleValue()-menu.getHeight();
-//                if(subSceneDisplayer!=null){
-////                    subSceneDisplayer.setHeight(subSceneDisplayer.getHeight()+newSceneHeight.doubleValue()-oldSceneHeight.doubleValue());
-////                    newScale.setPivotY(subSceneDisplayer.getLayoutY() *(neww)/(old));
-////                    newScale.setY( subSceneDisplayer.getScaleY() * (neww)/(old) );
-////                    subSceneDisplayer.getTransforms().add(newScale);
-//                }
-//            }
-//        });
-//    }
+                if(subSceneDisplayer!=null){
+//                    subSceneDisplayer.setWidth(subSceneDisplayer.getWidth()+newSceneWidth.doubleValue()-oldSceneWidth.doubleValue());
+//                    newScale.setPivotX(subSceneDisplayer.getLayoutX() *(neww)/(old));
+//                    newScale.setX( subSceneDisplayer.getScaleX() * (neww)/(old) );
+//                    subSceneDisplayer.getTransforms().add(newScale);
+                }
+            }
+        });
+        scene.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+//                if(newSceneHeight.doubleValue()>tab.heightProperty().doubleValue())
+//                    scroll.setPrefHeight(newSceneHeight.doubleValue()-tab.heightProperty().doubleValue());
+                Scale newScale = new Scale();
+                double old=oldSceneHeight.doubleValue()-menu.getHeight();
+                double neww=newSceneHeight.doubleValue()-menu.getHeight();
+                if(subSceneDisplayer!=null){
+//                    subSceneDisplayer.setHeight(subSceneDisplayer.getHeight()+newSceneHeight.doubleValue()-oldSceneHeight.doubleValue());
+//                    newScale.setPivotY(subSceneDisplayer.getLayoutY() *(neww)/(old));
+//                    newScale.setY( subSceneDisplayer.getScaleY() * (neww)/(old) );
+//                    subSceneDisplayer.getTransforms().add(newScale);
+                }
+            }
+        });
+    }
 
     public void KeyPressed(KeyEvent keyEvent) {
         try {
