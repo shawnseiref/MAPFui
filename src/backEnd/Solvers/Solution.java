@@ -1,5 +1,6 @@
 package backEnd.Solvers;
 
+import backEnd.Agents.Agent;
 import backEnd.Agents.AgentSolution;
 import backEnd.MapGenerators.Map;
 import backEnd.MapGenerators.Position;
@@ -36,27 +37,9 @@ public class Solution {
         return solLength;
     }
 
-//    public static void main(String[] args) {
-//        Solution sol = new Solution();
-//        sol.agentsSolutions = sol.generateSolution("0.(1,1)(1,2)(1,3)\n" +
-//                "1.(2,2)(2,3)(2,4)\n" +
-//                "2.(3,3)(3,2)(3,1)");
-//        sol.printSol();
-//    }
-//
-//    private void printSol() {
-//        for (int i = 0; i < agentsSolutions.size(); i++) {
-//            AgentSolution a = (AgentSolution) agentsSolutions.get(i);
-//            a.printPath();
-//            System.out.println();
-//        }
-//
-//    }
-
-
-    public ArrayList generate(Object o) {
+    public Solution(Object o) {
         if (!(o instanceof File))
-            return null;
+            return;
         Scanner in = null;
         try {
             in = new Scanner(((File) o));
@@ -65,45 +48,48 @@ public class Solution {
         }
         StringBuilder sb = new StringBuilder();
         while (in.hasNext()) {
-            sb.append(in.next());
+            sb.append(in.next()+'\n');
         }
         in.close();
-        return generateSolution(sb.toString());
+        agentsSolutions=new ArrayList<>();
+        agentsSolutions=generateSolution(sb.toString());
     }
+
 
     public ArrayList generateSolution(String solStr) {
         String[] strArr = solStr.split("\n");
         for (int i = 0; i < strArr.length; i++) {
-            AgentSolution agentSolution = makeSingleAgentSoltion(strArr[i]);
+            AgentSolution agentSolution = makeSingleAgentSolution(strArr[i],i);
             addSolution(agentSolution);
         }
         return agentsSolutions;
     }
 
 
-    private AgentSolution makeSingleAgentSoltion(String s) {
-        AgentSolution agentSolution = new AgentSolution();
-        ArrayList sol = new ArrayList();
-        Position position = null;
+    private AgentSolution makeSingleAgentSolution(String s,int id) {
+        ArrayList<Position> sol = new ArrayList();
+        Position first=null;
+        Position last = null;
         int p = 0, q = 0;
-        boolean isPos = false;
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '(') {
                 p = i;
-                isPos = true;
                 while (s.charAt(i) != ')') i++;
                     q = i;
-                    position = getPositionFromString(s.substring(p, q + 1));
+                last = getPositionFromString(s.substring(p, q + 1));
+                if(first==null)
+                    first=last;
             } else continue;
-            if (position != null) {
-                agentSolution.addPosition(position);
+            if (last != null) {
+                sol.add(last);
             } else continue;
         }
-        return agentSolution;
+        return new AgentSolution(new Agent(id,first,last),sol);
     }
 
     private Position getPositionFromString(String s) {
-        if (s.length() < 3 || s.charAt(0) != '(' || s.charAt(s.length() - 1) != ')') return null;
+        if (s.length() < 3 || s.charAt(0) != '(' || s.charAt(s.length() - 1) != ')')
+            return null;
         int i = 1;
         while (s.charAt(i) != ',') {
             i++;

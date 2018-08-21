@@ -1,14 +1,17 @@
 package frontend.model;
 
 import backEnd.Agents.Agent;
+import backEnd.Agents.AgentSolution;
 import backEnd.Game.SubScenario;
 import backEnd.MapGenerators.FileMapGenerator;
 import backEnd.MapGenerators.Map;
 import backEnd.MapGenerators.Position;
 import backEnd.MapGenerators.StringMapGenerator;
+import backEnd.Solvers.Solution;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 
 public class Model extends Observable implements IModel {
@@ -17,6 +20,20 @@ public class Model extends Observable implements IModel {
     private SubScenario createGame;
     private int currentSolState;
 
+
+    @Override
+    public void loadSol(File file) {
+        HashMap<Position,Agent> hashi=new HashMap<>();
+        Solution sol=new Solution(file);
+        ArrayList<AgentSolution> agentSols=sol.getAgentsSolutions();
+        for(int i=0;i<agentSols.size();i++){
+            hashi.put(agentSols.get(i).getPath().get(0),agentSols.get(i).getAgent());
+        }
+        simulateGame=new SubScenario(simulateGame.getMap(),hashi,sol);
+        currentSolState = 0;
+        setChanged();
+        notifyObservers();
+    }
 
     @Override
     public SubScenario getGame(Type type) {

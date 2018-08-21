@@ -45,6 +45,7 @@ public class ViewModel extends Observable implements Observer {
     }
 
     public void loadSol(File file) {
+        model.loadSol(file);
     }
 
     public SubScenario getGame(IModel.Type type) {

@@ -13,7 +13,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.transform.Scale;
@@ -93,9 +95,21 @@ public class ViewController implements Observer,IView, Initializable {
     }
 
     public void loadSol(ActionEvent event){
-        File file=loadMapFile("");
+        File file=loadSolFile("");
         viewModel.loadSol(file);
         controlVbox.setVisible(true);
+        event.consume();
+    }
+
+    public void forwardFunc(MouseEvent event){
+        subSceneDisplayer.nextState();
+        redraw();
+        event.consume();
+    }
+
+    public void backwardsFunc(MouseEvent event){
+        subSceneDisplayer.previousState();
+        redraw();
         event.consume();
     }
 
@@ -116,6 +130,13 @@ public class ViewController implements Observer,IView, Initializable {
         else if (subSceneDisplayer.getCurrentType()== IModel.Type.SIMULATE && viewModel.getGame(IModel.Type.SIMULATE)!=null)
             solBut.setVisible(true);
         event.consume();
+    }
+
+    private File loadSolFile(String location) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Load Solution");
+        //showing the file chooser
+        return fc.showOpenDialog(null);
     }
 
     private File loadMapFile(String location) {

@@ -17,6 +17,8 @@ public class SubScenDisplayer extends Canvas {
     private SubScenario game;
     private IModel.Type currentType= IModel.Type.CREATE;
     private int currentState=0;
+    private double cellHeight;
+    private double cellWidth;
     private double xLO;
     private double yLO;
     private double wLO;
@@ -47,7 +49,7 @@ public class SubScenDisplayer extends Canvas {
         redraw();
     }
     public void nextState(){
-        if(currentState!=game.getSol().getSolLength())
+        if(currentState<game.getSol().getSolLength()-1)
             currentState++;
     }
 
@@ -60,10 +62,12 @@ public class SubScenDisplayer extends Canvas {
         if(game==null)
             getGraphicsContext2D().clearRect(0, 0, getWidth(), getHeight());
         else if (game.getMap()!= null && game.getMap().getGrid()!=null) {
-            double cellHeight = 5;
-            double cellWidth = 5;
-            setHeight(cellHeight*game.getMap().getGrid().length);
-            setWidth(cellWidth*game.getMap().getGrid()[0].length);
+            char[][] grid=game.getMap().getGrid();
+            double size=Math.max(20,Math.min(800/grid.length,800/grid[0].length));
+            cellHeight = size;
+            cellWidth = size;
+            setHeight(cellHeight*grid.length);
+            setWidth(cellWidth*grid[0].length);
             try {
                 Image treeImage=null;
                 Image characterImageWay = null;
@@ -75,13 +79,13 @@ public class SubScenDisplayer extends Canvas {
                 outOfBounds = new Image(this.getClass().getResourceAsStream("/Images/void.jpg"));
                 GraphicsContext gc = getGraphicsContext2D();
                 gc.clearRect(0, 0, getWidth(), getHeight());
-                //Draw game.getMap().getGrid()
-                for (int i = 0; i < game.getMap().getGrid().length; i++) {
-                    for (int j = 0; j < game.getMap().getGrid()[i].length; j++) {
-                        if (game.getMap().getGrid()[i][j] == 'T') {
+                //Draw grid
+                for (int i = 0; i < grid.length; i++) {
+                    for (int j = 0; j < grid[i].length; j++) {
+                        if (grid[i][j] == 'T') {
                             gc.drawImage(treeImage, j * cellWidth,i * cellHeight , cellWidth, cellHeight);
                         }
-                        else if(game.getMap().getGrid()[i][j]== '@'){
+                        else if(grid[i][j]== '@'){
                             gc.drawImage(outOfBounds, j * cellWidth,i * cellHeight , cellWidth, cellHeight);
                         }
                     }
@@ -92,11 +96,11 @@ public class SubScenDisplayer extends Canvas {
                         //characterImage=something;
                         int k = 0;
                         for (k = 0; k < currentState; k++) {
-                            gc.setFill(Color.color((double)1/((double)t+2), (double)1/((double)t+2), (double)1/((double)t+2), 50));
-                            gc.fillRect(path.get(k).getX() * cellWidth, path.get(k).getY() * cellHeight, cellWidth, cellHeight);
+//                            gc.setFill(Color.color((double)1/((double)t+2), (double)1/((double)t+2), (double)1/((double)t+2), 0.5));
+//                            gc.fillRect(path.get(k).getY() * cellWidth, path.get(k).getX() * cellHeight, cellWidth, cellHeight);
                         }
                         gc.setFill(Color.color((double)1/((double)t+2),(double)1/((double)t+2),(double)1/((double)t+2)));
-                        gc.fillRect(path.get(k).getX() * cellWidth, path.get(k).getY() * cellHeight, cellWidth, cellHeight);
+                        gc.fillRect(path.get(k).getY() * cellWidth, path.get(k).getX() * cellHeight, cellWidth, cellHeight);
                     }
                 }
                 else if(currentType== IModel.Type.CREATE && game.getAgentsList()!=null){

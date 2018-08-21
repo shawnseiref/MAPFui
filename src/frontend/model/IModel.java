@@ -7,6 +7,8 @@ import backEnd.MapGenerators.Position;
 import java.io.File;
 
 public interface IModel {
+    void loadSol(File file);
+
     public enum Type {
         CREATE,SIMULATE
     }

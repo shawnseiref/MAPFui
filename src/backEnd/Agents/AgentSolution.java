@@ -12,6 +12,15 @@ public class AgentSolution {
         path=new ArrayList();
     }
 
+    public AgentSolution(Agent agent) {
+        this.agent = agent;
+    }
+
+    public AgentSolution(Agent agent, ArrayList<Position> path) {
+        this.agent = agent;
+        this.path = path;
+    }
+
     public AgentSolution(ArrayList path) {
         this.path = path;
     }
