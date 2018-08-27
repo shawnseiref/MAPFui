@@ -23,16 +23,21 @@ public class Model extends Observable implements IModel {
 
     @Override
     public void loadSol(File file) {
-        HashMap<Position,Agent> hashi=new HashMap<>();
         Solution sol=new Solution(file);
-        ArrayList<AgentSolution> agentSols=sol.getAgentsSolutions();
-        for(int i=0;i<agentSols.size();i++){
-            hashi.put(agentSols.get(i).getPath().get(0),agentSols.get(i).getAgent());
-        }
-        simulateGame=new SubScenario(simulateGame.getMap(),hashi,sol);
+        simulateGame=new SubScenario(simulateGame.getMap(),sol);
         currentSolState = 0;
         setChanged();
         notifyObservers();
+    }
+
+    @Override
+    public void moveState(int current,int next) {
+        if(next>=0 && next<simulateGame.getSol().getSolLength()){
+            ArrayList<AgentSolution> sols=simulateGame.getSol().getAgentsSolutions();
+            for(int i=0;i<sols.size();i++){
+                simulateGame.moveAgent(i,sols.get(i).getPath().get(next));
+            }
+        }
     }
 
     @Override

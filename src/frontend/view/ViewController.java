@@ -92,6 +92,10 @@ public class ViewController implements Observer,IView, Initializable {
         catch (Exception e){
             showAlert("Agent's position must be a reachable location in the map");
         }
+        startRow.clear();
+        startCol.clear();
+        goalCol.clear();
+        goalRow.clear();
     }
 
     public void loadSol(ActionEvent event){
@@ -104,12 +108,14 @@ public class ViewController implements Observer,IView, Initializable {
     }
 
     public void forwardFunc(MouseEvent event){
+        viewModel.moveState(subSceneDisplayer.getStateNum(),subSceneDisplayer.getStateNum()+1);
         subSceneDisplayer.nextState();
         redraw();
         event.consume();
     }
 
     public void backwardsFunc(MouseEvent event){
+        viewModel.moveState(subSceneDisplayer.getStateNum(),subSceneDisplayer.getStateNum()-1);
         subSceneDisplayer.previousState();
         redraw();
         event.consume();

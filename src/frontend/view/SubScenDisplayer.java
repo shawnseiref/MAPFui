@@ -10,8 +10,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SubScenDisplayer extends Canvas {
 
@@ -79,31 +81,23 @@ public class SubScenDisplayer extends Canvas {
                     agentWidth=cellWidth/game.getSol().getAgentsSolutions().size();
                     for (int t = 0; t < game.getSol().getAgentsSolutions().size(); t++) {
                         ArrayList<Position> path = game.getSol().getAgentsSolutions().get(t).getPath();
-                        //characterImage=something;
                         int k = 0;
-                        int ID=t+1;
-                        int r = (ID & 4) >> 2,
-                                g = (ID & 2) >> 1,
-                                b = ID & 1,
-                                h = (ID & 8) >> 3;
+                        Color color=getColor(t);
                         for (k = 0; k < currentState; k++) {
-                            gc.setFill(Color.rgb(100 * r + h * 80, 140 * g + h * 80, 100 * b + h * 80));
+                            gc.setFill(color);
                             gc.fillRect(path.get(k).getY() * cellWidth+t*agentWidth, path.get(k).getX() * cellHeight, agentWidth, cellHeight);
                         }
-                        gc.setFill(Color.rgb(100 * r + h * 80, 140 * g + h * 80, 100 * b + h * 80));
-//                        gc.fillRect(path.get(k).getY() * cellWidth, path.get(k).getX() * cellHeight, cellWidth, cellHeight);
-                        gc.fillOval(path.get(k).getY() * cellWidth, path.get(k).getX() * cellHeight, cellWidth, cellHeight);
-                        int stringSize=20;
-                        gc.setFont(new Font(stringSize));
-                        gc.setFill(Color.WHITE);
-                        gc.fillText(t+"",path.get(k).getY() * cellWidth+cellWidth/2-5*(int)Math.log10(ID)-6,path.get(k).getX() * cellHeight+cellHeight/2+5,cellWidth);
                     }
                 }
-                else if(currentType== IModel.Type.CREATE && game.getAgentsList()!=null){
+                if(game.getAgentsList()!=null){
                     ArrayList<Agent> agents=game.getAgentsList();
                     for(int t=0;t<agents.size();t++){
-                        gc.setFill(Color.color((double)1/((double)t+2),(double)1/((double)t+2),(double)1/((double)t+2)));
-                        gc.fillRect( agents.get(t).getLocation().getY() * cellWidth,agents.get(t).getLocation().getX() * cellHeight , cellWidth, cellHeight);
+                        gc.setFill(getColor(t));
+                        gc.fillOval(agents.get(t).getLocation().getY() * cellWidth, agents.get(t).getLocation().getX() * cellHeight, cellWidth, cellHeight);
+                        int stringSize=Math.max(10,(int)size/5);
+                        gc.setFont(new Font(stringSize));
+                        gc.setFill(Color.WHITE);
+                        gc.fillText(t+"",agents.get(t).getLocation().getY() * cellWidth+cellWidth/2-5*(int)Math.log10(t+1)-6,agents.get(t).getLocation().getX() * cellHeight+cellHeight/2+5,cellWidth);
                     }
                 }
             }
@@ -113,8 +107,21 @@ public class SubScenDisplayer extends Canvas {
         }
     }
 
+    private Color getColor(int t){
+        int ID=t+1;
+        int r = (ID & 4) >> 2,
+                g = (ID & 2) >> 1,
+                b = ID & 1,
+                h = (ID & 8) >> 3;
+        return (Color.rgb(100 * r + h * 80, 140 * g + h * 80, 100 * b + h * 80));
+    }
+
 
     public void setGame(SubScenario game) {
         this.game=game;
+    }
+
+    public int getStateNum() {
+        return currentState;
     }
 }

@@ -7,11 +7,13 @@ import backEnd.MapGenerators.Position;
 import java.io.File;
 
 public interface IModel {
-    void loadSol(File file);
 
     public enum Type {
         CREATE,SIMULATE
     }
+
+    void loadSol(File file);
+    void moveState(int j,int i);
     SubScenario getGame(Type type);
     Map getMap(Type type);
     void generateMaze(int width, int height,double percentage);

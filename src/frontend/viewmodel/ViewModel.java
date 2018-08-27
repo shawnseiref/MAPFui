@@ -92,4 +92,9 @@ public class ViewModel extends Observable implements Observer {
             throw new Exception();
         }
     }
+
+    public void moveState(int j,int i) {
+        model.moveState(j,i);
+        setChanged();
+    }
 }

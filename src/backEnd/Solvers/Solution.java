@@ -82,7 +82,9 @@ public class Solution {
             } else continue;
             if (last != null) {
                 sol.add(last);
-            } else continue;
+            }
+            else
+                continue;
         }
         return new AgentSolution(new Agent(id,first,last),sol);
     }

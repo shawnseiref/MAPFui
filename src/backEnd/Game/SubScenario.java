@@ -16,13 +16,11 @@ import java.util.Scanner;
 public class SubScenario {
     private Map map;
     private ArrayList<Agent> agentsList;
-    private HashMap<Position,Agent> agents;
     private int nextAgentID;
     private Solution sol;
 
     public SubScenario(Map map) {
         this.map = map;
-        this.agents = new HashMap();
         agentsList=new ArrayList<>();
         this.nextAgentID = 0;
     }
@@ -31,16 +29,19 @@ public class SubScenario {
         return agentsList;
     }
 
-    public SubScenario(Map map, HashMap<Position, Agent> agents, Solution sol) {
+    public SubScenario(Map map,Solution sol) {
         this.map = map;
-        this.agents = agents;
         agentsList=new ArrayList<>();
         this.sol = sol;
+        if(sol!=null){
+            for (AgentSolution aSol: sol.getAgentsSolutions()) {
+                addAgent(aSol.getAgent());
+            }
+        }
     }
 
     public SubScenario(Map map, HashMap<Position, Agent> agents) {
         this.map = map;
-        this.agents = agents;
         agentsList=new ArrayList<>();
         nextAgentID=agents.size();
     }
@@ -84,7 +85,6 @@ public class SubScenario {
             nextPos=new Position(x,y);
             if(agentsList.get(nextAgentID).getLocation()==null){
                 agentsList.get(nextAgentID).setLocation(nextPos);//check if really changed
-                agents.put(agentsList.get(nextAgentID).getLocation(),newOne);
             }
             newOneSol.addPosition(nextPos);
         }
@@ -106,27 +106,22 @@ public class SubScenario {
         this.map = map;
     }
 
-    public HashMap<Position, Agent> getAgents() {
-        return agents;
-    }
-
-    public void setAgents(HashMap<Position, Agent> agents) {
-        this.agents = agents;
-    }
-
     public void addAgent(Agent agent){
-        agents.put(agent.getLocation(),agent);
         agentsList.add(agent);
         nextAgentID++;
     }
 
-    public void removeAgent(Agent agent){
-        agents.remove(agent.getLocation());
+    public void moveAgent(Position current, Position target){
+        for(int i=0;i<agentsList.size();i++){
+            if(agentsList.get(i).getLocation()==current){
+                agentsList.get(i).setLocation(target);
+                return;
+            }
+        }
     }
 
-    public void moveAgent(Position current, Position target){
-        agents.put(target,agents.get(current));
-        agents.remove(current);
+    public void moveAgent(int index, Position target){
+        agentsList.get(index).setLocation(target);
     }
 
     private String fileToStr(File file){
