@@ -96,8 +96,10 @@ public class ViewController implements Observer,IView, Initializable {
 
     public void loadSol(ActionEvent event){
         File file=loadSolFile("");
-        viewModel.loadSol(file);
-        controlVbox.setVisible(true);
+        if(file!=null){
+            viewModel.loadSol(file);
+            controlVbox.setVisible(true);
+        }
         event.consume();
     }
 
@@ -134,6 +136,7 @@ public class ViewController implements Observer,IView, Initializable {
 
     private File loadSolFile(String location) {
         FileChooser fc = new FileChooser();
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Solution files", "*.sol"));
         fc.setTitle("Load Solution");
         //showing the file chooser
         return fc.showOpenDialog(null);

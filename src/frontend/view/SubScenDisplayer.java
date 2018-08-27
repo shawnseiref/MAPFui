@@ -9,6 +9,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 
@@ -19,12 +20,7 @@ public class SubScenDisplayer extends Canvas {
     private int currentState=0;
     private double cellHeight;
     private double cellWidth;
-    private double xLO;
-    private double yLO;
-    private double wLO;
-    private double hLO;
-    private double sxLO;
-    private double syLO;
+    private double agentWidth;
     private boolean start=false;
 
     public void setCurrentType(IModel.Type currentType) {
@@ -37,14 +33,6 @@ public class SubScenDisplayer extends Canvas {
 
     public void setMap(Map map) {
         game = new SubScenario(map);
-        if(!start){
-            xLO=getLayoutX();
-            yLO=getLayoutY();
-            wLO=getWidth();
-            hLO=getHeight();
-            sxLO=getScaleX();
-            syLO=getScaleY();
-        }
         start=true;
         redraw();
     }
@@ -63,18 +51,15 @@ public class SubScenDisplayer extends Canvas {
             getGraphicsContext2D().clearRect(0, 0, getWidth(), getHeight());
         else if (game.getMap()!= null && game.getMap().getGrid()!=null) {
             char[][] grid=game.getMap().getGrid();
-            double size=Math.max(20,Math.min(800/grid.length,800/grid[0].length));
+            double size=Math.max(25,Math.min(800/grid.length,800/grid[0].length));
             cellHeight = size;
             cellWidth = size;
             setHeight(cellHeight*grid.length);
             setWidth(cellWidth*grid[0].length);
             try {
                 Image treeImage=null;
-                Image characterImageWay = null;
-                Image characterImage = null;
                 Image outOfBounds=null;
                 Image goal=null;
-                Image visitedoutOfBounds=null;
                 treeImage = new Image(this.getClass().getResourceAsStream("/Images/tree.png"));
                 outOfBounds = new Image(this.getClass().getResourceAsStream("/Images/void.jpg"));
                 GraphicsContext gc = getGraphicsContext2D();
@@ -91,16 +76,27 @@ public class SubScenDisplayer extends Canvas {
                     }
                 }
                 if(currentType== IModel.Type.SIMULATE && game.getSol()!=null) {
+                    agentWidth=cellWidth/game.getSol().getAgentsSolutions().size();
                     for (int t = 0; t < game.getSol().getAgentsSolutions().size(); t++) {
                         ArrayList<Position> path = game.getSol().getAgentsSolutions().get(t).getPath();
                         //characterImage=something;
                         int k = 0;
+                        int ID=t+1;
+                        int r = (ID & 4) >> 2,
+                                g = (ID & 2) >> 1,
+                                b = ID & 1,
+                                h = (ID & 8) >> 3;
                         for (k = 0; k < currentState; k++) {
-//                            gc.setFill(Color.color((double)1/((double)t+2), (double)1/((double)t+2), (double)1/((double)t+2), 0.5));
-//                            gc.fillRect(path.get(k).getY() * cellWidth, path.get(k).getX() * cellHeight, cellWidth, cellHeight);
+                            gc.setFill(Color.rgb(100 * r + h * 80, 140 * g + h * 80, 100 * b + h * 80));
+                            gc.fillRect(path.get(k).getY() * cellWidth+t*agentWidth, path.get(k).getX() * cellHeight, agentWidth, cellHeight);
                         }
-                        gc.setFill(Color.color((double)1/((double)t+2),(double)1/((double)t+2),(double)1/((double)t+2)));
-                        gc.fillRect(path.get(k).getY() * cellWidth, path.get(k).getX() * cellHeight, cellWidth, cellHeight);
+                        gc.setFill(Color.rgb(100 * r + h * 80, 140 * g + h * 80, 100 * b + h * 80));
+//                        gc.fillRect(path.get(k).getY() * cellWidth, path.get(k).getX() * cellHeight, cellWidth, cellHeight);
+                        gc.fillOval(path.get(k).getY() * cellWidth, path.get(k).getX() * cellHeight, cellWidth, cellHeight);
+                        int stringSize=20;
+                        gc.setFont(new Font(stringSize));
+                        gc.setFill(Color.WHITE);
+                        gc.fillText(t+"",path.get(k).getY() * cellWidth+cellWidth/2-5*(int)Math.log10(ID)-6,path.get(k).getX() * cellHeight+cellHeight/2+5,cellWidth);
                     }
                 }
                 else if(currentType== IModel.Type.CREATE && game.getAgentsList()!=null){
