@@ -51,6 +51,8 @@ public class ViewController implements Observer,IView, Initializable {
     public javafx.scene.image.ImageView pause;
     public javafx.scene.image.ImageView play;
     public javafx.scene.image.ImageView forward;
+    public javafx.scene.control.Label xIndex;
+    public javafx.scene.control.Label yIndex;
 
 
     @Override
@@ -132,7 +134,7 @@ public class ViewController implements Observer,IView, Initializable {
         if (file != null) {
             viewModel.loadMap(file, current);
         }
-        redraw();
+        newMap();
         if(subSceneDisplayer.getCurrentType()== IModel.Type.CREATE && viewModel.getGame(IModel.Type.CREATE)!=null)
             createVbox.setVisible(true);
         else if (subSceneDisplayer.getCurrentType()== IModel.Type.SIMULATE && viewModel.getGame(IModel.Type.SIMULATE)!=null)
@@ -210,6 +212,13 @@ public class ViewController implements Observer,IView, Initializable {
         }
     }
 
+    public void newMap(){
+        if(subSceneDisplayer!=null){
+            subSceneDisplayer.setGame(viewModel.getGame(subSceneDisplayer.getCurrentType()));
+            subSceneDisplayer.newMap();
+        }
+    }
+
 //    public void setResizeEvent(Scene scene) {
 //        scene.widthProperty().addListener(new ChangeListener<Number>() {
 //            @Override
@@ -255,6 +264,16 @@ public class ViewController implements Observer,IView, Initializable {
         } catch (NullPointerException e) {
             keyEvent.consume();
         }
+    }
+
+    public void click(MouseEvent event){
+//        double x=event.getX()-tab.widthProperty().doubleValue();
+//        double y=event.getY()-menu.heightProperty().doubleValue();
+        double size=subSceneDisplayer.getSize();
+        double x=event.getX()/size;
+        double y=event.getY()/size;
+        xIndex.setText("X: "+(int)x);
+        yIndex.setText("Y: "+(int)y);
     }
 
     public void zoomInOut(ScrollEvent scrollEvent) {

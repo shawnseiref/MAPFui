@@ -58,10 +58,6 @@ public class SubScenDisplayer extends Canvas{
             char[][] grid=game.getMap().getGrid();
             double size=Math.max(100,Math.min(800/grid.length,800/grid[0].length));
             size=Math.min(8192/Math.max(grid.length,grid[0].length),size);
-            if(cellHeight==0 || cellWidth==0){
-                cellHeight = size;
-                cellWidth = size;
-            }
             setHeight(cellHeight*grid.length);
             setWidth(cellWidth*grid[0].length);
             try {
@@ -139,4 +135,16 @@ public class SubScenDisplayer extends Canvas{
         }
     }
 
+    public double getSize() {
+        return cellHeight;
+    }
+
+    public void newMap() {
+        char[][] grid=game.getMap().getGrid();
+        double size=Math.max(100,Math.min(800/grid.length,800/grid[0].length));
+        size=Math.min(8192/Math.max(grid.length,grid[0].length),size);
+        cellHeight = size;
+        cellWidth = size;
+        redraw();
+    }
 }
