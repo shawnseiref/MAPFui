@@ -30,7 +30,6 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         //--------------
         ViewController view = fxmlLoader.getController();
-//        view.setResizeEvent(scene);
         view.setViewModel(viewModel);
         viewModel.addObserver(view);
         //        scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> view.KeyPressed(event));

@@ -23,8 +23,7 @@ public class SubScenDisplayer extends Canvas{
     private SubScenario game;
     private IModel.Type currentType= IModel.Type.CREATE;
     private int currentState=0;
-    private double cellHeight=0;
-    private double cellWidth=0;
+    private double cellSize=0;
     private double agentWidth;
     private boolean start=false;
 
@@ -56,10 +55,8 @@ public class SubScenDisplayer extends Canvas{
             getGraphicsContext2D().clearRect(0, 0, getWidth(), getHeight());
         else if (game.getMap()!= null && game.getMap().getGrid()!=null) {
             char[][] grid=game.getMap().getGrid();
-            double size=Math.max(100,Math.min(800/grid.length,800/grid[0].length));
-            size=Math.min(8192/Math.max(grid.length,grid[0].length),size);
-            setHeight(cellHeight*grid.length);
-            setWidth(cellWidth*grid[0].length);
+            setHeight(cellSize*grid.length);
+            setWidth(cellSize*grid[0].length);
             try {
                 Image treeImage=null;
                 Image outOfBounds=null;
@@ -71,22 +68,22 @@ public class SubScenDisplayer extends Canvas{
                 for (int i = 0; i < grid.length; i++) {
                     for (int j = 0; j < grid[i].length; j++) {
                         if (grid[i][j] == 'T') {
-                            gc.drawImage(treeImage, j * cellWidth,i * cellHeight , cellWidth, cellHeight);
+                            gc.drawImage(treeImage, j * cellSize,i * cellSize , cellSize, cellSize);
                         }
                         else if(grid[i][j]== '@'){
-                            gc.drawImage(outOfBounds, j * cellWidth,i * cellHeight , cellWidth, cellHeight);
+                            gc.drawImage(outOfBounds, j * cellSize,i * cellSize , cellSize, cellSize);
                         }
                     }
                 }
                 if(currentType== IModel.Type.SIMULATE && game.getSol()!=null) {
-                    agentWidth=cellWidth/game.getSol().getAgentsSolutions().size();
+                    agentWidth=cellSize/game.getSol().getAgentsSolutions().size();
                     for (int t = 0; t < game.getSol().getAgentsSolutions().size(); t++) {
                         ArrayList<Position> path = game.getSol().getAgentsSolutions().get(t).getPath();
                         int k = 0;
                         Color color=getColor(t);
                         for (k = 0; k < currentState; k++) {
                             gc.setFill(color);
-                            gc.fillRect(path.get(k).getY() * cellWidth+t*agentWidth, path.get(k).getX() * cellHeight, agentWidth, cellHeight);
+                            gc.fillRect(path.get(k).getY() * cellSize+t*agentWidth, path.get(k).getX() * cellSize, agentWidth, cellSize);
                         }
                     }
                 }
@@ -94,11 +91,11 @@ public class SubScenDisplayer extends Canvas{
                     ArrayList<Agent> agents=game.getAgentsList();
                     for(int t=0;t<agents.size();t++){
                         gc.setFill(getColor(t));
-                        gc.fillOval(agents.get(t).getLocation().getY() * cellWidth, agents.get(t).getLocation().getX() * cellHeight, cellWidth, cellHeight);
-                        int stringSize=Math.max(10,(int)size/5);
+                        gc.fillOval(agents.get(t).getLocation().getY() * cellSize, agents.get(t).getLocation().getX() * cellSize, cellSize, cellSize);
+                        int stringSize=Math.max(10,(int)cellSize/5);
                         gc.setFont(new Font(stringSize));
                         gc.setFill(Color.WHITE);
-                        gc.fillText(t+"",agents.get(t).getLocation().getY() * cellWidth+cellWidth/2-stringSize*0.45*((int)Math.log10(t+1)+1),agents.get(t).getLocation().getX() * cellHeight+cellHeight/2+stringSize*0.45,cellWidth);
+                        gc.fillText(t+"",agents.get(t).getLocation().getY() * cellSize+cellSize/2-stringSize*0.45*((int)Math.log10(t+1)+1),agents.get(t).getLocation().getX() * cellSize+cellSize/2+stringSize*0.45,cellSize);
                     }
                 }
             }
@@ -128,23 +125,28 @@ public class SubScenDisplayer extends Canvas{
 
     public void changeSize(double zoomFactor) {
         char[][] grid=game.getMap().getGrid();
-        if(cellWidth*zoomFactor*grid.length<8192 && cellHeight*zoomFactor*grid[0].length<8192){
-            cellWidth=cellWidth*zoomFactor;
-            cellHeight=cellHeight*zoomFactor;
+        if(cellSize*zoomFactor*grid.length<8192 && cellSize*zoomFactor*grid[0].length<8192){
+            cellSize=cellSize*zoomFactor;
             redraw();
         }
     }
 
     public double getSize() {
-        return cellHeight;
+        if(game==null)
+            return 0;
+        return cellSize;
     }
 
     public void newMap() {
-        char[][] grid=game.getMap().getGrid();
-        double size=Math.max(100,Math.min(800/grid.length,800/grid[0].length));
-        size=Math.min(8192/Math.max(grid.length,grid[0].length),size);
-        cellHeight = size;
-        cellWidth = size;
+        double size=computeSize();
+        cellSize = size;
         redraw();
+    }
+
+    private double computeSize(){
+        char[][] grid=game.getMap().getGrid();
+        double size=Math.max(100,Math.min(getParent().getParent().getBoundsInParent().getWidth()/grid.length,getParent().getParent().getBoundsInParent().getHeight()/grid[0].length));
+        size=Math.min(8192/Math.max(grid.length,grid[0].length),size);
+        return size;
     }
 }

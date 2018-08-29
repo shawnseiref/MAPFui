@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ViewController implements Observer,IView, Initializable {
@@ -54,28 +56,16 @@ public class ViewController implements Observer,IView, Initializable {
     public javafx.scene.control.Label xIndex;
     public javafx.scene.control.Label yIndex;
 
+    private boolean clicked=false;
+    private int x;
+    private int y;
+
 
     @Override
     public void update(Observable o, Object arg) {
         if (o == viewModel) {
             redraw();
-            //displayGame(viewModel.getMap().getGrid());
-//            btn_generateMaze.setDisable(false);
         }
-    }
-
-//    @Override
-    public void displayGame(char[][] map) {
-        //subScenDisplayer.setMaze(map);
-//        int characterPositionRow = viewModel.getCharacterPositionRow();
-//        int characterPositionColumn = viewModel.getCharacterPositionColumn();
-//        subScenDisplayer.setCharacterPosition(characterPositionRow, characterPositionColumn);
-//        this.characterPositionRow.set(characterPositionRow + "");
-//        this.characterPositionColumn.set(characterPositionColumn + "");
-    }
-
-    public ViewModel getViewModel() {
-        return viewModel;
     }
 
     public void setViewModel(ViewModel viewModel) {
@@ -133,8 +123,8 @@ public class ViewController implements Observer,IView, Initializable {
         File file=loadMapFile(path);
         if (file != null) {
             viewModel.loadMap(file, current);
+            newMap();
         }
-        newMap();
         if(subSceneDisplayer.getCurrentType()== IModel.Type.CREATE && viewModel.getGame(IModel.Type.CREATE)!=null)
             createVbox.setVisible(true);
         else if (subSceneDisplayer.getCurrentType()== IModel.Type.SIMULATE && viewModel.getGame(IModel.Type.SIMULATE)!=null)
@@ -183,6 +173,7 @@ public class ViewController implements Observer,IView, Initializable {
         if(subSceneDisplayer!=null) {
             subSceneDisplayer.setCurrentType(IModel.Type.SIMULATE);
             redraw();
+            disableLabels();
         }
         event.consume();
     }
@@ -191,6 +182,7 @@ public class ViewController implements Observer,IView, Initializable {
         if(subSceneDisplayer!=null) {
             subSceneDisplayer.setCurrentType(IModel.Type.CREATE);
             redraw();
+            disableLabels();
         }
         event.consume();
     }
@@ -207,7 +199,8 @@ public class ViewController implements Observer,IView, Initializable {
 
     public void redraw(){
         if(subSceneDisplayer!=null){
-            subSceneDisplayer.setGame(viewModel.getGame(subSceneDisplayer.getCurrentType()));
+            if(viewModel!=null)
+                subSceneDisplayer.setGame(viewModel.getGame(subSceneDisplayer.getCurrentType()));
             subSceneDisplayer.redraw();
         }
     }
@@ -219,66 +212,51 @@ public class ViewController implements Observer,IView, Initializable {
         }
     }
 
-//    public void setResizeEvent(Scene scene) {
-//        scene.widthProperty().addListener(new ChangeListener<Number>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-//                Scale newScale = new Scale();
-////                if(newSceneWidth.doubleValue()>tab.widthProperty().doubleValue())
-////                    scroll.setPrefWidth(newSceneWidth.doubleValue()-tab.widthProperty().doubleValue());
-////                double old=oldSceneWidth.doubleValue()-VB.getWidth();
-////                double neww=newSceneWidth.doubleValue()-VB.getWidth();
-//                if(subSceneDisplayer!=null){
-////                    subSceneDisplayer.setWidth(subSceneDisplayer.getWidth()+newSceneWidth.doubleValue()-oldSceneWidth.doubleValue());
-////                    newScale.setPivotX(subSceneDisplayer.getLayoutX() *(neww)/(old));
-////                    newScale.setX( subSceneDisplayer.getScaleX() * (neww)/(old) );
-////                    subSceneDisplayer.getTransforms().add(newScale);
-//                }
-//            }
-//        });
-//        scene.heightProperty().addListener(new ChangeListener<Number>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-////                if(newSceneHeight.doubleValue()>tab.heightProperty().doubleValue())
-////                    scroll.setPrefHeight(newSceneHeight.doubleValue()-tab.heightProperty().doubleValue());
-//                Scale newScale = new Scale();
-//                double old=oldSceneHeight.doubleValue()-menu.getHeight();
-//                double neww=newSceneHeight.doubleValue()-menu.getHeight();
-//                if(subSceneDisplayer!=null){
-////                    subSceneDisplayer.setHeight(subSceneDisplayer.getHeight()+newSceneHeight.doubleValue()-oldSceneHeight.doubleValue());
-////                    newScale.setPivotY(subSceneDisplayer.getLayoutY() *(neww)/(old));
-////                    newScale.setY( subSceneDisplayer.getScaleY() * (neww)/(old) );
-////                    subSceneDisplayer.getTransforms().add(newScale);
-//                }
-//            }
-//        });
-//    }
-
-    public void KeyPressed(KeyEvent keyEvent) {
-        try {
-            viewModel.getMap(subSceneDisplayer.getCurrentType());
-//            if (!mazeDisplayer.getFinished())
-//                viewModel.moveCharacter(keyEvent.getCode());
-            keyEvent.consume();
-//            btn_solveMaze.setDisable(false);
-        } catch (NullPointerException e) {
-            keyEvent.consume();
+    public void click(MouseEvent event){
+        if(disableLabels()==false){
+            double size=subSceneDisplayer.getSize();
+            double x=event.getX()/size;
+            double y=event.getY()/size;
+            xIndex.setText("X: "+(int)x);
+            yIndex.setText("Y: "+(int)y);
+            // TODO: 29-Aug-18 : check valid location.
+            if(event.getClickCount()>1 && subSceneDisplayer.getCurrentType()== IModel.Type.CREATE){
+                if(clicked==false){
+                    if (confirm("Do you want to add a new Agent in the current location?\n if you press \"OK\" please double click on the target location.")){
+                        clicked=true;
+                        this.x=(int)x;
+                        this.y=(int)y;
+                    }
+                }
+                else if(clicked==true){
+                    clicked=false;
+                    if (confirm("Do you want to set the current location as the target of the new agent?")){
+                        viewModel.addAgent(new Position(this.x,this.y),new Position((int)x,(int)y),subSceneDisplayer.getCurrentType());
+                    }
+                }
+            }
         }
     }
 
-    public void click(MouseEvent event){
-//        double x=event.getX()-tab.widthProperty().doubleValue();
-//        double y=event.getY()-menu.heightProperty().doubleValue();
+    private boolean disableLabels() {
         double size=subSceneDisplayer.getSize();
-        double x=event.getX()/size;
-        double y=event.getY()/size;
-        xIndex.setText("X: "+(int)x);
-        yIndex.setText("Y: "+(int)y);
+        if(size==0){
+            xIndex.setText("X: ");
+            yIndex.setText("Y: ");
+            return true;
+        }
+        return false;
+    }
+
+    public boolean confirm(String str){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText(str);
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.get() == ButtonType.OK;
     }
 
     public void zoomInOut(ScrollEvent scrollEvent) {
         try {
-            AnimatedZoomOperation zoomOperator = new AnimatedZoomOperation();
             double zoomFactor;
             if (scrollEvent.isControlDown()) {
                 zoomFactor = 1.5;
@@ -287,25 +265,10 @@ public class ViewController implements Observer,IView, Initializable {
                     zoomFactor = 1 / zoomFactor;
                 }
                 subSceneDisplayer.changeSize(zoomFactor);
-//                zoomOperator.zoom(scroll, zoomFactor, scrollEvent.getSceneX(), scrollEvent.getSceneY());
                 scrollEvent.consume();
             }
         } catch (NullPointerException e) {
             scrollEvent.consume();
         }
     }
-
-
-//    public void zoomBack(ActionEvent actionEvent) {
-//        btn_zoomBack.setDisable(true);
-//        Timeline timeline = new Timeline(60);
-//        timeline.getKeyFrames().clear();
-//        timeline.getKeyFrames().addAll(
-//                new KeyFrame(Duration.millis(100), new KeyValue(scrollPane.translateXProperty(), 0)),
-//                new KeyFrame(Duration.millis(100), new KeyValue(scrollPane.translateYProperty(), 0)),
-//                new KeyFrame(Duration.millis(100), new KeyValue(scrollPane.scaleXProperty(), 1)),
-//                new KeyFrame(Duration.millis(100), new KeyValue(scrollPane.scaleYProperty(), 1)));
-//        timeline.play();
-//        btn_zoomBack.setVisible(false);
-//    }
 }
