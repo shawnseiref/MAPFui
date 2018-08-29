@@ -21,7 +21,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.view.ViewController">
+<!--xmlns="http://javafx.com/javafx/8.0.121"-->
+
+<BorderPane prefHeight="500.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121" fx:controller="frontend.view.ViewController">
     <left>
         <TabPane fx:id="tab" prefHeight="500.0" prefWidth="266.0" BorderPane.alignment="CENTER">
             <tabs>
@@ -121,9 +123,9 @@
         </TabPane>
     </left>
     <center>
-        <ScrollPane fx:id="scroll" prefHeight="500.0" prefWidth="5098.0" BorderPane.alignment="CENTER">
+        <ScrollPane fx:id="scroll" maxHeight="Infinity" maxWidth="Infinity" BorderPane.alignment="CENTER">
             <content>
-                <SubScenDisplayer fx:id="subSceneDisplayer" height="468.0" width="559.0" />
+                <SubScenDisplayer fx:id="subSceneDisplayer" onScroll="#zoomInOut" />
             </content>
         </ScrollPane>
     </center>
