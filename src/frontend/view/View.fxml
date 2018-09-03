@@ -66,7 +66,7 @@
                                         <MenuButton alignment="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="266.0" text="New Map" BorderPane.alignment="CENTER">
                                             <items>
                                                 <MenuItem mnemonicParsing="false" onAction="#loadMap" text="Load map" />
-                                                <MenuItem mnemonicParsing="false" text="Random map" />
+                                                <MenuItem mnemonicParsing="false" onAction="#randomMap" text="Random map" />
                                             </items>
                                         </MenuButton>
                            </top>

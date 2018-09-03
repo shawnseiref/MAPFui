@@ -3,10 +3,7 @@ package frontend.model;
 import backEnd.Agents.Agent;
 import backEnd.Agents.AgentSolution;
 import backEnd.Game.SubScenario;
-import backEnd.MapGenerators.FileMapGenerator;
-import backEnd.MapGenerators.Map;
-import backEnd.MapGenerators.Position;
-import backEnd.MapGenerators.StringMapGenerator;
+import backEnd.MapGenerators.*;
 import backEnd.Solvers.Solution;
 
 import java.io.File;
@@ -20,6 +17,15 @@ public class Model extends Observable implements IModel {
     private SubScenario createGame;
     private int currentSolState;
 
+
+    @Override
+    public void randomMap(double[] arr) { ;
+        RandomMapGenerator gen = new RandomMapGenerator();
+        createGame=new SubScenario(gen.generate(arr));
+        currentSolState = 0;
+        setChanged();
+        notifyObservers();
+    }
 
     @Override
     public void loadSol(File file) {

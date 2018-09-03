@@ -1,5 +1,6 @@
 package frontend.view;
 
+import javafx.fxml.FXML;
 import backEnd.MapGenerators.Map;
 import backEnd.MapGenerators.Position;
 import frontend.model.IModel;
@@ -9,7 +10,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -21,6 +24,9 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
 
 import javax.swing.*;
 import java.io.File;
@@ -99,6 +105,22 @@ public class ViewController implements Observer,IView, Initializable {
         event.consume();
     }
 
+    public void randomMap(ActionEvent event){
+        try {
+            Stage stage = new Stage();
+            stage.setTitle("Random Map");
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            Parent root = fxmlLoader.load(getClass().getResource("randomMap.fxml").openStream());
+            Scene scene = new Scene(root, 300, 300);
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL); //Lock the window until it closes
+            randomMapController controller=fxmlLoader.getController();
+            controller.setViewController(this);
+            stage.show();
+        }
+        catch (Exception e) {e.printStackTrace(); }
+    }
+
     public void forwardFunc(MouseEvent event){
         viewModel.moveState(subSceneDisplayer.getStateNum(),subSceneDisplayer.getStateNum()+1);
         subSceneDisplayer.nextState();
@@ -152,7 +174,7 @@ public class ViewController implements Observer,IView, Initializable {
         return fc.showOpenDialog(null);
     }
 
-    private void showAlert(String alertMessage) {
+    public void showAlert(String alertMessage) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText(alertMessage);
         alert.show();
@@ -270,5 +292,15 @@ public class ViewController implements Observer,IView, Initializable {
         } catch (NullPointerException e) {
             scrollEvent.consume();
         }
+    }
+
+    public void randomMap(double[] arr) {
+        viewModel.randomMap(arr);
+    }
+
+    public void randomClosed() {
+        subSceneDisplayer.newMap();
+        if(subSceneDisplayer.getCurrentType()== IModel.Type.CREATE && viewModel.getGame(IModel.Type.CREATE)!=null)
+            createVbox.setVisible(true);
     }
 }

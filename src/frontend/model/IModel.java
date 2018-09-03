@@ -8,6 +8,8 @@ import java.io.File;
 
 public interface IModel {
 
+    void randomMap(double[] arr);
+
     public enum Type {
         CREATE,SIMULATE
     }

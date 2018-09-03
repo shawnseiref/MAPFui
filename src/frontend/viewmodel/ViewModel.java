@@ -97,4 +97,8 @@ public class ViewModel extends Observable implements Observer {
         model.moveState(j,i);
         setChanged();
     }
+
+    public void randomMap(double[] arr) {
+        model.randomMap(arr);
+    }
 }
