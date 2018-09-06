@@ -14,10 +14,10 @@ public class StringMapGenerator extends AMapGenerator {
         int counter = 0;
         counter = skipToNum(mapStr, counter);
         rowsNum = getNum(mapStr, counter);
-        counter += (int) Math.log10(rowsNum)+1;
+        counter += (int) Math.log10(rowsNum) + 1;
         counter = skipToNum(mapStr, counter);
         colNum = getNum(mapStr, counter);
-        counter += Math.log10(colNum)+4;
+        counter += Math.log10(colNum) + 4;
         char[][] map = new char[rowsNum][colNum];
         for (int rows = 0; rows < rowsNum; rows++) {
             for (int cols = 0; cols < colNum; cols++) {
@@ -25,13 +25,28 @@ public class StringMapGenerator extends AMapGenerator {
                 counter++;
             }
         }
+        map = cleanMap(map);
         return new Map(map);
+    }
+
+    private char[][] cleanMap(char[][] map) {
+        int row = 0, col = 0;
+        boolean isVoidcol = true, isLastVoidcol = false, isVoidrow = true, isLastVoidrow = false;
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[0].length; j++) {
+                if (map[i][j]!='@' && map[i][j]!='O'){
+                    isVoidcol=false;
+                    isVoidrow=false;
+                }
+            }
+        }
+        return map;
     }
 
     private int getNum(String str, int counter) {
         int res = 0;
         while (Character.isDigit(str.charAt(counter))) {
-            res = res * 10 + Integer.parseInt(""+str.charAt(counter));
+            res = res * 10 + Integer.parseInt("" + str.charAt(counter));
             counter++;
         }
         return res;
@@ -43,4 +58,6 @@ public class StringMapGenerator extends AMapGenerator {
         }
         return counter;
     }
+
+
 }
