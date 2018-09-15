@@ -227,6 +227,12 @@ public class ViewController implements Observer,IView, Initializable {
         }
     }
 
+    public void drawNewAgentLocation(){
+        if(subSceneDisplayer!=null){
+                subSceneDisplayer.drawTempAgent(x,y);
+        }
+    }
+
     public void newMap(){
         if(subSceneDisplayer!=null){
             subSceneDisplayer.setGame(viewModel.getGame(subSceneDisplayer.getCurrentType()));
@@ -248,6 +254,7 @@ public class ViewController implements Observer,IView, Initializable {
                         clicked=true;
                         this.x=(int)x;
                         this.y=(int)y;
+                        drawNewAgentLocation();
                     }
                 }
                 else if(clicked==true){
