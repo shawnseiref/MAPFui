@@ -59,10 +59,10 @@ public class SubScenDisplayer extends Canvas {
             setHeight(cellSize * grid.length);
             setWidth(cellSize * grid[0].length);
             try {
-                Image treeImage = null;
-                Image outOfBounds = null;
-                treeImage = new Image(this.getClass().getResourceAsStream("/Images/tree.png"));
-                outOfBounds = new Image(this.getClass().getResourceAsStream("/Images/void.jpg"));
+//                Image treeImage = null;
+//                Image outOfBounds = null;
+//                treeImage = new Image(this.getClass().getResourceAsStream("/Images/tree.png"));
+//                outOfBounds = new Image(this.getClass().getResourceAsStream("/Images/void.jpg"));
                 GraphicsContext gc = getGraphicsContext2D();
                 gc.clearRect(0, 0, getWidth(), getHeight());
                 //Draw grid
@@ -71,23 +71,18 @@ public class SubScenDisplayer extends Canvas {
                 for (int i = 0; i < grid.length; i++) {
                     for (int j = 0; j < grid[i].length; j++) {
                         if (grid[i][j] == 'T') {
-                            gc.drawImage(treeImage, j * cellSize, i * cellSize, cellSize, cellSize);
+//                            gc.drawImage(treeImage, j * cellSize, i * cellSize, cellSize, cellSize);
+                            gc.setFill(Color.gray(0.15));
+                            gc.fillRect( j * cellSize, i * cellSize, cellSize, cellSize);
                         } else if (grid[i][j] == '@') {
-                            gc.drawImage(outOfBounds, j * cellSize, i * cellSize, cellSize, cellSize);
+//                            gc.drawImage(outOfBounds, j * cellSize, i * cellSize, cellSize, cellSize);
+                            gc.setFill(Color.BLACK);
+                            gc.fillRect( j * cellSize, i * cellSize, cellSize, cellSize);
                         }
                     }
                 }
                 if (currentType == IModel.Type.SIMULATE && game.getSol() != null) {
-                    agentWidth = cellSize / game.getSol().getAgentsSolutions().size();
-                    for (int t = 0; t < game.getSol().getAgentsSolutions().size(); t++) {
-                        ArrayList<Position> path = game.getSol().getAgentsSolutions().get(t).getPath();
-                        int k = 0;
-                        Color color = getColor(t);
-                        for (k = 0; k < currentState; k++) {
-                            gc.setFill(color);
-                            gc.fillRect(path.get(k).getY() * cellSize + t * agentWidth, path.get(k).getX() * cellSize, agentWidth, cellSize);
-                        }
-                    }
+                    drawPath(gc);
                 }
                 if (game.getAgentsList() != null) {
                     drawAgents(gc);
@@ -99,11 +94,24 @@ public class SubScenDisplayer extends Canvas {
         }
     }
 
+    private void drawPath(GraphicsContext gc) {
+        agentWidth = cellSize / game.getSol().getAgentsSolutions().size();
+        for (int i = 0; i < game.getSol().getAgentsSolutions().size(); i++) {
+            ArrayList<Position> path = game.getSol().getAgentsSolutions().get(i).getPath();
+            int j = 0;
+            Color color = getColor(i);
+            for (j = 0; j < currentState; j++) {
+                gc.setFill(color);
+                gc.fillRect(path.get(j).getX() * cellSize + i * agentWidth, path.get(j).getY() * cellSize, agentWidth, cellSize);
+            }
+        }
+    }
+
     private void drawTargets(GraphicsContext gc) {
         ArrayList<Agent> agents = game.getAgentsList();
-        for (int t = 0; t < agents.size(); t++) {
-            drawAgent(agents.get(t).getGoalLocation().getY(), agents.get(t).getGoalLocation().getX(), t, true, gc);
-            drawTarget(agents.get(t).getGoalLocation().getY(), agents.get(t).getGoalLocation().getX(), t, gc);
+        for (int i = 0; i < agents.size(); i++) {
+            drawAgent(agents.get(i).getGoalLocation().getX(), agents.get(i).getGoalLocation().getY(), i, true, gc);
+            drawTarget(agents.get(i).getGoalLocation().getX(), agents.get(i).getGoalLocation().getY(), i, gc);
         }
     }
 
@@ -121,7 +129,7 @@ public class SubScenDisplayer extends Canvas {
     private void drawAgents(GraphicsContext gc) {
         ArrayList<Agent> agents = game.getAgentsList();
         for (int t = 0; t < agents.size(); t++) {
-            drawAgent(agents.get(t).getLocation().getY(), agents.get(t).getLocation().getX(), t, true, gc);
+            drawAgent(agents.get(t).getLocation().getX(), agents.get(t).getLocation().getY(), t, true, gc);
         }
     }
 
