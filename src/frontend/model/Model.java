@@ -138,4 +138,46 @@ public class Model extends Observable implements IModel {
         }
         return ans;
     }
+
+    public boolean validStart(Position pos){
+        try{
+            ArrayList<Agent> list=createGame.getAgentsList();
+            for (Agent agent: list) {
+                if(agent.getLocation().equals(pos)==true)
+                    return false;
+            }
+        }
+        catch (Exception e){
+            return false;
+        }
+        return validLoc(pos);
+    }
+
+    public boolean validGoal(Position pos){
+        try{
+            ArrayList<Agent> list=createGame.getAgentsList();
+            for (Agent agent: list) {
+                if(agent.getGoalLocation().equals(pos)==true)
+                    return false;
+            }
+        }
+        catch (Exception e){
+            return false;
+        }
+        return validLoc(pos);
+    }
+
+    private boolean validLoc(Position pos){
+        int x=pos.getX();
+        int y=pos.getY();
+        try{
+            char[][] grid=createGame.getMap().getGrid();
+            if(grid[x][y]!='.')
+                return false;
+        }
+        catch (Exception e){
+            return false;
+        }
+        return true;
+    }
 }

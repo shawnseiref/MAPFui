@@ -101,4 +101,12 @@ public class ViewModel extends Observable implements Observer {
     public void randomMap(double[] arr) {
         model.randomMap(arr);
     }
+
+    public boolean validGoal(Position pos){
+        return model.validGoal(pos);
+    }
+
+    public boolean validStart(Position pos){
+        return model.validStart(pos);
+    }
 }

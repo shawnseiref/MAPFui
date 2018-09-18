@@ -25,4 +25,6 @@ public interface IModel {
     void addAgent(Position start, Position goal,Type type);
     String getMapStr();
     String getScensStr(String name);
+    boolean validStart(Position pos);
+    boolean validGoal(Position pos);
 }

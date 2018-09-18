@@ -245,11 +245,16 @@ public class ViewController implements Observer,IView, Initializable {
             double size=subSceneDisplayer.getSize();
             double x=event.getX()/size;
             double y=event.getY()/size;
+            Position pos=new Position((int)x,(int)y);
             xIndex.setText("X: "+(int)x);
             yIndex.setText("Y: "+(int)y);
             // TODO: 29-Aug-18 : check valid location.
             if(event.getClickCount()>1 && subSceneDisplayer.getCurrentType()== IModel.Type.CREATE){
                 if(clicked==false){
+                    if(viewModel.validStart(pos)==false){
+                        showAlert("Please pick a valid position for the new agent");
+                        return;
+                    }
                     if (confirm("Do you want to add a new Agent in the current location?\n if you press \"OK\" please double click on the target location.")){
                         clicked=true;
                         this.x=(int)x;
@@ -258,8 +263,12 @@ public class ViewController implements Observer,IView, Initializable {
                     }
                 }
                 else if(clicked==true){
-                    clicked=false;
+                    if(viewModel.validGoal(pos)==false || (this.x==(int)x && this.y==(int)y) ){
+                        showAlert("Please pick a valid position for the new agent");
+                        return;
+                    }
                     if (confirm("Do you want to set the current location as the target of the new agent?")){
+                        clicked=false;
                         viewModel.addAgent(new Position(this.x,this.y),new Position((int)x,(int)y),subSceneDisplayer.getCurrentType());
                     }
                 }

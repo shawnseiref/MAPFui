@@ -18,10 +18,10 @@ public class StringMapGenerator extends AMapGenerator {
         counter = skipToNum(mapStr, counter);
         colNum = getNum(mapStr, counter);
         counter += Math.log10(colNum) + 4;
-        char[][] map = new char[rowsNum][colNum];
+        char[][] map = new char[colNum][rowsNum];
         for (int rows = 0; rows < rowsNum; rows++) {
             for (int cols = 0; cols < colNum; cols++) {
-                map[rows][cols] = mapStr.charAt(counter);
+                map[cols][rows] = mapStr.charAt(counter);
                 counter++;
             }
         }

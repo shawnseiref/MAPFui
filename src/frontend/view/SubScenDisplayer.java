@@ -68,16 +68,16 @@ public class SubScenDisplayer extends Canvas {
                 //Draw grid
                 if (cellSize != 0)
                     drawGrid(gc, cellSize);
-                for (int i = 0; i < grid.length; i++) {
-                    for (int j = 0; j < grid[i].length; j++) {
-                        if (grid[i][j] == 'T') {
-//                            gc.drawImage(treeImage, j * cellSize, i * cellSize, cellSize, cellSize);
-                            gc.setFill(Color.gray(0.15));
-                            gc.fillRect( j * cellSize, i * cellSize, cellSize, cellSize);
-                        } else if (grid[i][j] == '@') {
-//                            gc.drawImage(outOfBounds, j * cellSize, i * cellSize, cellSize, cellSize);
+                for (int x = 0; x < grid.length; x++) {
+                    for (int y = 0; y < grid[x].length; y++) {
+                        if (grid[x][y] == 'T') {
+//                            gc.drawImage(treeImage, x * cellSize, y * cellSize, cellSize, cellSize);
+                            gc.setFill(Color.gray(0.25));
+                            gc.fillRect( x * cellSize, y * cellSize, cellSize, cellSize);
+                        } else if (grid[x][y] == '@') {
+//                            gc.drawImage(outOfBounds, x * cellSize, y * cellSize, cellSize, cellSize);
                             gc.setFill(Color.BLACK);
-                            gc.fillRect( j * cellSize, i * cellSize, cellSize, cellSize);
+                            gc.fillRect( x * cellSize, y * cellSize, cellSize, cellSize);
                         }
                     }
                 }
@@ -109,9 +109,17 @@ public class SubScenDisplayer extends Canvas {
 
     private void drawTargets(GraphicsContext gc) {
         ArrayList<Agent> agents = game.getAgentsList();
+        boolean posTaken=false;
         for (int i = 0; i < agents.size(); i++) {
-            drawAgent(agents.get(i).getGoalLocation().getX(), agents.get(i).getGoalLocation().getY(), i, true, gc);
-            drawTarget(agents.get(i).getGoalLocation().getX(), agents.get(i).getGoalLocation().getY(), i, gc);
+            Agent agent=agents.get(i);
+            for (int j = 0; j < agents.size(); j++) {
+                if(agent.getGoalLocation().equals(agents.get(j).getLocation())==true)
+                    posTaken=true;
+            }
+            if(posTaken==false){
+                drawAgent(agent.getGoalLocation().getX(), agent.getGoalLocation().getY(), i, true, gc);
+                drawTarget(agent.getGoalLocation().getX(), agent.getGoalLocation().getY(), i, gc);
+            }
         }
     }
 
@@ -136,9 +144,7 @@ public class SubScenDisplayer extends Canvas {
     private void drawAgent(int x, int y, int botNum, boolean drawNum, GraphicsContext gc) {
 
         gc.setFill(drawNum? getColor(botNum): Color.RED);
-        gc.fillOval(x * cellSize,
-                y * cellSize,
-                cellSize, cellSize);
+        gc.fillOval(x * cellSize, y * cellSize, cellSize, cellSize);
         if (drawNum) {
             int stringSize = Math.max(10, (int) cellSize / 5);
             gc.setFont(new Font(stringSize));
