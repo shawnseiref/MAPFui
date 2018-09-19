@@ -61,10 +61,13 @@ public class ViewController implements Observer,IView, Initializable {
     public javafx.scene.image.ImageView forward;
     public javafx.scene.control.Label xIndex;
     public javafx.scene.control.Label yIndex;
+    public javafx.scene.control.Slider playSpeed;
 
     private boolean clicked=false;
     private int x;
     private int y;
+    private boolean playBottum=false;
+    private Thread thread;
 
 
     @Override
@@ -123,7 +126,8 @@ public class ViewController implements Observer,IView, Initializable {
 
     public void forwardFunc(MouseEvent event){
         viewModel.moveState(subSceneDisplayer.getStateNum(),subSceneDisplayer.getStateNum()+1);
-        subSceneDisplayer.nextState();
+        if(subSceneDisplayer.nextState()==false)
+            playBottum=false;
         redraw();
         event.consume();
     }
@@ -132,6 +136,31 @@ public class ViewController implements Observer,IView, Initializable {
         viewModel.moveState(subSceneDisplayer.getStateNum(),subSceneDisplayer.getStateNum()-1);
         subSceneDisplayer.previousState();
         redraw();
+        event.consume();
+    }
+
+    public void play(MouseEvent event){
+        playBottum=true;
+        thread=new Thread(() -> { playLoop(event); });
+        thread.start();
+    }
+
+    private void playLoop(MouseEvent event) {
+        while(playBottum==true){
+            try {
+                Thread.sleep(((long)(105-playSpeed.getValue())*20));
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            forwardFunc(event);
+        }
+        pause(event);
+        thread.stop();
+    }
+
+    public void pause(MouseEvent event){
+        playBottum=false;
         event.consume();
     }
 

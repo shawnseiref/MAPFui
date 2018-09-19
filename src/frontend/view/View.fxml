@@ -93,12 +93,12 @@
                                                   </rowConstraints>
                                                   <children>
                                                       <ImageView fx:id="backward" fitHeight="27.0" fitWidth="36.0" onMouseClicked="#backwardsFunc" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
-                                                      <ImageView fx:id="pause" fitHeight="41.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
-                                                      <ImageView fx:id="play" fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" />
+                                                      <ImageView fx:id="pause" fitHeight="41.0" fitWidth="47.0" onMouseClicked="#pause" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
+                                                      <ImageView fx:id="play" fitHeight="30.0" fitWidth="40.0" onMouseClicked="#play" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" />
                                           <ImageView fx:id="forward" fitHeight="31.0" fitWidth="44.0" onMouseClicked="#forwardFunc" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" />
                                                       <Label prefHeight="21.0" prefWidth="82.0" text="Controls:" />
                                                       <Label prefHeight="21.0" prefWidth="107.0" text="Play speed:" GridPane.rowIndex="1" />
-                                                      <Slider prefHeight="18.0" prefWidth="176.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+                                                      <Slider fx:id="playSpeed" prefHeight="18.0" prefWidth="176.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
                                                   </children>
                                               </GridPane>
                                           </children>

@@ -41,14 +41,20 @@ public class SubScenDisplayer extends Canvas {
         redraw();
     }
 
-    public void nextState() {
-        if (currentState < game.getSol().getSolLength() - 1)
+    public boolean nextState() {
+        if (currentState < game.getSol().getSolLength() - 1){
             currentState++;
+            return true;
+        }
+        return false;
     }
 
-    public void previousState() {
-        if (currentState != 0)
+    public boolean previousState() {
+        if (currentState != 0){
             currentState--;
+            return true;
+        }
+        return false;
     }
 
     public void redraw() {
@@ -108,19 +114,20 @@ public class SubScenDisplayer extends Canvas {
     }
 
     private void drawTargets(GraphicsContext gc) {
-        ArrayList<Agent> agents = game.getAgentsList();
-        boolean posTaken=false;
-        for (int i = 0; i < agents.size(); i++) {
-            Agent agent=agents.get(i);
-            for (int j = 0; j < agents.size(); j++) {
-                if(agent.getGoalLocation().equals(agents.get(j).getLocation())==true)
-                    posTaken=true;
-            }
-            if(posTaken==false){
-                drawAgent(agent.getGoalLocation().getX(), agent.getGoalLocation().getY(), i, true, gc);
-                drawTarget(agent.getGoalLocation().getX(), agent.getGoalLocation().getY(), i, gc);
-            }
-        }
+//        ArrayList<Agent> agents = game.getAgentsList();
+//        boolean posTaken=false;
+//        for (int i = 0; i < agents.size(); i++) {
+//            Agent agent=agents.get(i);
+//            for (int j = 0; j < agents.size(); j++) {
+//                if(agent.getGoalLocation().equals(agents.get(j).getLocation())==true)
+//                    posTaken=true;
+//            }
+//            if(posTaken==false){
+//                drawAgent(agent.getGoalLocation().getX(), agent.getGoalLocation().getY(), i, true, gc);
+//                drawTarget(agent.getGoalLocation().getX(), agent.getGoalLocation().getY(), i, gc);
+//            }
+//            posTaken=false;
+//        }
     }
 
     private void drawTarget(int x, int y, int botNum, GraphicsContext gc) {
