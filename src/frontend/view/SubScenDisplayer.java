@@ -41,6 +41,10 @@ public class SubScenDisplayer extends Canvas {
         redraw();
     }
 
+    public void currentStateZero(){
+        currentState=0;
+    }
+
     public boolean nextState() {
         if (currentState < game.getSol().getSolLength() - 1){
             currentState++;
@@ -62,8 +66,8 @@ public class SubScenDisplayer extends Canvas {
             getGraphicsContext2D().clearRect(0, 0, getWidth(), getHeight());
         else if (game.getMap() != null && game.getMap().getGrid() != null) {
             char[][] grid = game.getMap().getGrid();
-            setHeight(cellSize * grid.length);
-            setWidth(cellSize * grid[0].length);
+            setHeight(cellSize * grid[0].length);
+            setWidth(cellSize * grid.length);
             try {
 //                Image treeImage = null;
 //                Image outOfBounds = null;
@@ -73,7 +77,7 @@ public class SubScenDisplayer extends Canvas {
                 gc.clearRect(0, 0, getWidth(), getHeight());
                 //Draw grid
                 if (cellSize != 0)
-                    drawGrid(gc, cellSize);
+                    drawGrid(gc);
                 for (int x = 0; x < grid.length; x++) {
                     for (int y = 0; y < grid[x].length; y++) {
                         if (grid[x][y] == 'T') {
@@ -114,20 +118,20 @@ public class SubScenDisplayer extends Canvas {
     }
 
     private void drawTargets(GraphicsContext gc) {
-//        ArrayList<Agent> agents = game.getAgentsList();
-//        boolean posTaken=false;
-//        for (int i = 0; i < agents.size(); i++) {
-//            Agent agent=agents.get(i);
-//            for (int j = 0; j < agents.size(); j++) {
-//                if(agent.getGoalLocation().equals(agents.get(j).getLocation())==true)
-//                    posTaken=true;
-//            }
-//            if(posTaken==false){
-//                drawAgent(agent.getGoalLocation().getX(), agent.getGoalLocation().getY(), i, true, gc);
-//                drawTarget(agent.getGoalLocation().getX(), agent.getGoalLocation().getY(), i, gc);
-//            }
-//            posTaken=false;
-//        }
+        ArrayList<Agent> agents = game.getAgentsList();
+        boolean posTaken=false;
+        for (int i = 0; i < agents.size(); i++) {
+            Agent agent=agents.get(i);
+            for (int j = 0; j < agents.size(); j++) {
+                if(agent.getGoalLocation().equals(agents.get(j).getLocation())==true)
+                    posTaken=true;
+            }
+            if(posTaken==false){
+                drawAgent(agent.getGoalLocation().getX(), agent.getGoalLocation().getY(), i, true, gc);
+                drawTarget(agent.getGoalLocation().getX(), agent.getGoalLocation().getY(), i, gc);
+            }
+            posTaken=false;
+        }
     }
 
     private void drawTarget(int x, int y, int botNum, GraphicsContext gc) {
@@ -166,20 +170,23 @@ public class SubScenDisplayer extends Canvas {
 
 
 
-    private void drawGrid(GraphicsContext gc, double spacing) {
+    private void drawGrid(GraphicsContext gc) {
         gc.setLineWidth(1); // change the line width
+        char[][] grid = game.getMap().getGrid();
 
-        final int hLineCount = (int) Math.floor((getHeight() + 1) / spacing);
-        final int vLineCount = (int) Math.floor((getWidth() + 1) / spacing);
+        int hLineCount = (int) Math.floor(grid[0].length+1);
+        int vLineCount = (int) Math.floor(grid.length+1);
 
         gc.setStroke(Color.RED);
+        double one=grid.length*cellSize;
+        double two=getWidth();
         for (int i = 0; i < hLineCount; i++) {
-            gc.strokeLine(0, snap((i + 1) * spacing), getWidth(), snap((i + 1) * spacing));
+            gc.strokeLine(0, snap((i + 1) * cellSize), getWidth(), snap((i + 1) * cellSize));
         }
 
         gc.setStroke(Color.BLUE);
         for (int i = 0; i < vLineCount; i++) {
-            gc.strokeLine(snap((i + 1) * spacing), 0, snap((i + 1) * spacing), getHeight());
+            gc.strokeLine(snap((i + 1) * cellSize), 0, snap((i + 1) * cellSize), getHeight());
         }
     }
 
@@ -229,7 +236,8 @@ public class SubScenDisplayer extends Canvas {
 
     private double computeSize() {
         char[][] grid = game.getMap().getGrid();
-        double size = Math.max(100, Math.min(getParent().getParent().getBoundsInParent().getWidth() / grid.length, getParent().getParent().getBoundsInParent().getHeight() / grid[0].length));
+        double size = Math.max(100, Math.min(getWidth() / grid.length,getHeight() / grid[0].length));
+//        double size = Math.max(100, Math.min(getParent().getParent().getBoundsInParent().getWidth() / grid.length, getParent().getParent().getBoundsInParent().getHeight() / grid[0].length));
         size = Math.min(8192 / Math.max(grid.length, grid[0].length), size);
         return size;
     }

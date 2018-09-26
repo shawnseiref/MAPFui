@@ -5,11 +5,8 @@ import backEnd.MapGenerators.Map;
 import backEnd.MapGenerators.Position;
 import frontend.model.IModel;
 import frontend.viewmodel.ViewModel;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -17,18 +14,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
-import javax.swing.*;
 import java.io.File;
 import java.net.URL;
 import java.util.Observable;
@@ -66,7 +59,7 @@ public class ViewController implements Observer,IView, Initializable {
     private boolean clicked=false;
     private int x;
     private int y;
-    private boolean playBottum=false;
+    private boolean playButton =false;
     private Thread thread;
 
 
@@ -102,6 +95,7 @@ public class ViewController implements Observer,IView, Initializable {
     public void loadSol(ActionEvent event){
         File file=loadSolFile("");
         if(file!=null){
+            subSceneDisplayer.currentStateZero();
             viewModel.loadSol(file);
             controlVbox.setVisible(true);
         }
@@ -127,7 +121,7 @@ public class ViewController implements Observer,IView, Initializable {
     public void forwardFunc(MouseEvent event){
         viewModel.moveState(subSceneDisplayer.getStateNum(),subSceneDisplayer.getStateNum()+1);
         if(subSceneDisplayer.nextState()==false)
-            playBottum=false;
+            playButton =false;
         redraw();
         event.consume();
     }
@@ -140,13 +134,13 @@ public class ViewController implements Observer,IView, Initializable {
     }
 
     public void play(MouseEvent event){
-        playBottum=true;
+        playButton =true;
         thread=new Thread(() -> { playLoop(event); });
         thread.start();
     }
 
     private void playLoop(MouseEvent event) {
-        while(playBottum==true){
+        while(playButton ==true){
             try {
                 Thread.sleep(((long)(105-playSpeed.getValue())*20));
             }
@@ -156,11 +150,11 @@ public class ViewController implements Observer,IView, Initializable {
             forwardFunc(event);
         }
         pause(event);
-        thread.stop();
+        //thread.stop();
     }
 
     public void pause(MouseEvent event){
-        playBottum=false;
+        playButton =false;
         event.consume();
     }
 
