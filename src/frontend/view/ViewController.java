@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
@@ -189,13 +190,19 @@ public class ViewController implements Observer,IView, Initializable {
         FileChooser fc = new FileChooser();
         fc.setTitle("Load Map");
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("map files", "*.map"));
-        if (location.equals("SavedMaps"))
-            fc.setInitialDirectory(new File("SavedMaps"));
-        else if (location.equals("Created Files"))
-            fc.setInitialDirectory(new File("Created Files"));
+        File file=checkIfExists(location);
+        fc.setInitialDirectory(file);
         //showing the file chooser
         return fc.showOpenDialog(null);
     }
+
+    private File checkIfExists(String location) {
+        File file=new File(System.getProperty("user.dir")+"/"+location);
+        if(file.exists()==false)
+            file.mkdir();
+        return file;
+    }
+
 
     public void showAlert(String alertMessage) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -234,6 +241,7 @@ public class ViewController implements Observer,IView, Initializable {
 
     public void save(ActionEvent event) throws Exception {
         try{
+            checkIfExists("Created Files");
             viewModel.createFiles(fileName.getText());
         }
         catch (Exception e){

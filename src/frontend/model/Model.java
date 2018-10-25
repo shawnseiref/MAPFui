@@ -115,7 +115,7 @@ public class Model extends Observable implements IModel {
         ans+="map\n";
         for(int i=0;i<grid.length;i++){
             for (int j=0;j<grid[0].length;j++){
-                ans+=grid[i][j];
+                ans+=grid[j][i];
             }
             ans+="\n";
         }

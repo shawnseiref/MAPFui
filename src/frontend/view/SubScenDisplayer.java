@@ -76,8 +76,6 @@ public class SubScenDisplayer extends Canvas {
                 GraphicsContext gc = getGraphicsContext2D();
                 gc.clearRect(0, 0, getWidth(), getHeight());
                 //Draw grid
-                if (cellSize != 0)
-                    drawGrid(gc);
                 for (int x = 0; x < grid.length; x++) {
                     for (int y = 0; y < grid[x].length; y++) {
                         if (grid[x][y] == 'T') {
@@ -98,6 +96,8 @@ public class SubScenDisplayer extends Canvas {
                     drawAgents(gc);
                     drawTargets(gc);
                 }
+                if (cellSize != 0)
+                    drawGrid(gc);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -105,14 +105,26 @@ public class SubScenDisplayer extends Canvas {
     }
 
     private void drawPath(GraphicsContext gc) {
-        agentWidth = cellSize / game.getSol().getAgentsSolutions().size();
+        agentWidth = cellSize / (game.getSol().getAgentsSolutions().size());
+        double empty=0.2;
         for (int i = 0; i < game.getSol().getAgentsSolutions().size(); i++) {
             ArrayList<Position> path = game.getSol().getAgentsSolutions().get(i).getPath();
             int j = 0;
             Color color = getColor(i);
             for (j = 0; j < currentState; j++) {
                 gc.setFill(color);
-                gc.fillRect(path.get(j).getX() * cellSize + i * agentWidth, path.get(j).getY() * cellSize, agentWidth, cellSize);
+                if(path.get(j).getX()<path.get(j+1).getX()){//move to right
+                    gc.fillRect(path.get(j).getX() * cellSize + i * agentWidth+empty*agentWidth ,path.get(j).getY() * cellSize + i*agentWidth+empty*agentWidth, cellSize+agentWidth*(1-2*empty), agentWidth*(1-2*empty));
+                }
+                if(path.get(j).getX()>path.get(j+1).getX()){//move to left
+                    gc.fillRect(path.get(j+1).getX() * cellSize + i * agentWidth+empty*agentWidth ,path.get(j+1).getY() * cellSize + i*agentWidth+empty*agentWidth, cellSize+agentWidth*(1-2*empty), agentWidth*(1-2*empty));
+                }
+                if(path.get(j).getY()<path.get(j+1).getY()){//move to down
+                    gc.fillRect(path.get(j).getX() * cellSize + i * agentWidth+empty*agentWidth, path.get(j).getY() * cellSize + i*agentWidth+empty*agentWidth, agentWidth*(1-2*empty), cellSize+agentWidth*(1-2*empty));
+                }
+                if(path.get(j).getY()>path.get(j+1).getY()){//move to up
+                    gc.fillRect(path.get(j+1).getX() * cellSize + i * agentWidth+empty*agentWidth, path.get(j+1).getY() * cellSize + i*agentWidth+empty*agentWidth, agentWidth*(1-2*empty), cellSize+agentWidth*(1-2*empty));
+                }
             }
         }
     }
@@ -139,10 +151,10 @@ public class SubScenDisplayer extends Canvas {
         gc.fillOval(x * cellSize+0.1*cellSize,
                 y * cellSize+0.1*cellSize,
                 cellSize*0.8, cellSize*0.8);
-            int stringSize = Math.max(10, (int) cellSize / 5);
-            gc.setFont(new Font(stringSize));
-            gc.setFill(Color.BLACK);
-            gc.fillText(botNum + "", x * cellSize + cellSize / 2 - stringSize * 0.45 * ((int) Math.log10(botNum + 1) + 1), y * cellSize + cellSize / 2 + stringSize * 0.45, cellSize);
+        int stringSize = Math.max(10, (int) cellSize / 5);
+        gc.setFont(new Font(stringSize));
+        gc.setFill(Color.BLACK);
+        gc.fillText(botNum + "", x * cellSize + cellSize / 2 - stringSize * 0.45 * ((int) Math.log10(botNum + 1) + 1), y * cellSize + cellSize / 2 + stringSize * 0.45, cellSize);
     }
 
     private void drawAgents(GraphicsContext gc) {
@@ -177,14 +189,13 @@ public class SubScenDisplayer extends Canvas {
         int hLineCount = (int) Math.floor(grid[0].length+1);
         int vLineCount = (int) Math.floor(grid.length+1);
 
-        gc.setStroke(Color.RED);
+        gc.setStroke(Color.BLACK);
         double one=grid.length*cellSize;
         double two=getWidth();
         for (int i = 0; i < hLineCount; i++) {
             gc.strokeLine(0, snap((i + 1) * cellSize), getWidth(), snap((i + 1) * cellSize));
         }
 
-        gc.setStroke(Color.BLUE);
         for (int i = 0; i < vLineCount; i++) {
             gc.strokeLine(snap((i + 1) * cellSize), 0, snap((i + 1) * cellSize), getHeight());
         }
