@@ -4,11 +4,10 @@ import backEnd.Agents.Agent;
 import backEnd.Agents.AgentSolution;
 import backEnd.Game.SubScenario;
 import backEnd.MapGenerators.*;
-import backEnd.Solvers.Solution;
+import backEnd.Solution.Solution;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Observable;
 
 public class Model extends Observable implements IModel {

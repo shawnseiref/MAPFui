@@ -1,14 +1,11 @@
-package backEnd.Solvers;
+package backEnd.Solution;
 
 import backEnd.Agents.Agent;
 import backEnd.Agents.AgentSolution;
-import backEnd.MapGenerators.Map;
 import backEnd.MapGenerators.Position;
-import backEnd.MapGenerators.StringMapGenerator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Scanner;
 

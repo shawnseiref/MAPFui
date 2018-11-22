@@ -4,20 +4,23 @@ import backEnd.Agents.Agent;
 import backEnd.MapGenerators.Position;
 import javafx.geometry.Pos;
 
-public abstract class AConflict implements IError{
-    protected Agent first;
-    protected Position firstCurrentPos;
-    protected Agent second;
-    protected Position secondCurrentPos;
+import java.util.List;
 
-    public AConflict(Agent first, Position firstCurrentPos, Agent second, Position secondCurrentPos) {
-        this.first = first;
-        this.firstCurrentPos = firstCurrentPos;
-        this.second = second;
-        this.secondCurrentPos = secondCurrentPos;
+public abstract class AConflict extends AError{
+    protected List<Agent> agents;
+
+    public AConflict(List<Agent> Agents,int TimeStamp) {
+        super(TimeStamp);
+        this.agents=Agents;
     }
 
-    protected String getDetailedMsg(Position firstConflictPos,Position secondConflictPos){
-        return ("{Agent number "+first.getId()+" from "+firstCurrentPos.toString()+" to "+firstConflictPos.toString()+" <> "+"Agent number "+second.getId()+" from "+secondCurrentPos.toString()+" to "+secondConflictPos.toString()+"}");
+    protected String getAgentsIDs() {
+        String ans = "Agents ";
+        for (Agent agent : agents) {
+            ans += agent.getId() + ",";
+        }
+        if(ans.length()>0)
+            ans=ans.substring(0,ans.length()-1);
+        return ans;
     }
 }

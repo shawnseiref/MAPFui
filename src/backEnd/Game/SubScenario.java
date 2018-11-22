@@ -4,8 +4,7 @@ import backEnd.Agents.Agent;
 import backEnd.Agents.AgentSolution;
 import backEnd.MapGenerators.Map;
 import backEnd.MapGenerators.Position;
-import backEnd.MapGenerators.StringMapGenerator;
-import backEnd.Solvers.Solution;
+import backEnd.Solution.Solution;
 
 import java.io.File;
 import java.io.FileNotFoundException;
