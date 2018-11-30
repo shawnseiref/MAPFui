@@ -109,4 +109,8 @@ public class ViewModel extends Observable implements Observer {
     public boolean validStart(Position pos){
         return model.validStart(pos);
     }
+
+    public void loadInstance(File file, IModel.Type type) {
+        model.generateInstance(file,type);
+    }
 }

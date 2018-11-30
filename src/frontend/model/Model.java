@@ -6,9 +6,14 @@ import backEnd.Game.SubScenario;
 import backEnd.MapGenerators.*;
 import backEnd.Solution.Solution;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Model extends Observable implements IModel {
 
@@ -18,7 +23,7 @@ public class Model extends Observable implements IModel {
 
 
     @Override
-    public void randomMap(double[] arr) { ;
+    public void randomMap(double[] arr) {
         RandomMapGenerator gen = new RandomMapGenerator();
         createGame=new SubScenario(gen.generate(arr));
         currentSolState = 0;
@@ -91,6 +96,14 @@ public class Model extends Observable implements IModel {
     }
 
     @Override
+    public void generateInstance(File file, Type type) {
+        InstanceMapGenerator gen = new InstanceMapGenerator();
+        generateMaze(file, type);
+        simulateGame = new SubScenario(gen.generate(file));
+        convertInstaceToSubScennario(file);
+    }
+
+    @Override
     public void moveCharacter(Position current, Position target) {
         simulateGame.moveAgent(current, target);
         setChanged();
@@ -103,6 +116,23 @@ public class Model extends Observable implements IModel {
             createGame.addAgent(new Agent(createGame.getNextAgentID(), start, goal));
         else
             simulateGame.addAgent(new Agent(simulateGame.getNextAgentID(), start, goal));
+    }
+
+    private void convertInstaceToSubScennario(File file) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            ArrayList<String> lines = br.lines().collect(Collectors.toCollection(ArrayList::new));
+            int sceneFirstRow = Integer.parseInt(lines.get(2).split(",")[0]);
+            for (int i = sceneFirstRow +3  ; i < lines.size(); i++) {
+                String[] agentValuesString = lines.get(i).split(",");
+                simulateGame.addAgent(new Agent(Integer.parseInt(agentValuesString[0]),
+                        new Position(Integer.parseInt(agentValuesString[1]),Integer.parseInt(agentValuesString[2])),
+                        new Position(Integer.parseInt(agentValuesString[3]),Integer.parseInt(agentValuesString[4]))));
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getMapStr(){
@@ -136,6 +166,29 @@ public class Model extends Observable implements IModel {
             ans+=agent.getRealDistance()+"\n";
         }
         return ans;
+    }
+
+    public String getInstanceStr(String name){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(name).append("\n").append("Grid:\n");
+        char[][] grid=createGame.getMap().getGrid();
+        stringBuilder.append(grid.length).append(",").append(grid[0].length).append("\n");
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                stringBuilder.append(grid[i][j]);
+            }
+            stringBuilder.append("\n");
+        }
+        ArrayList<Agent> agents=createGame.getAgentsList();
+        stringBuilder.append("Agents:\n").append(agents.size()).append("\n");
+        for (int i = 0; i < agents.size(); i++) {
+            stringBuilder.append(agents.get(i).getId()).append(",");
+            stringBuilder.append(agents.get(i).getLocation().getX()).append(",");
+            stringBuilder.append(agents.get(i).getLocation().getY()).append(",");
+            stringBuilder.append(agents.get(i).getGoalLocation().getX()).append(",");
+            stringBuilder.append(agents.get(i).getGoalLocation().getY()).append("\n");
+        }
+        return stringBuilder.toString();
     }
 
     public boolean validStart(Position pos){

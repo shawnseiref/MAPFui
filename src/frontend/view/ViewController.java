@@ -21,14 +21,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-
 import java.io.File;
 import java.net.URL;
-import java.nio.file.Path;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ViewController implements Observer,IView, Initializable {
 
@@ -349,5 +344,30 @@ public class ViewController implements Observer,IView, Initializable {
         subSceneDisplayer.newMap();
         if(subSceneDisplayer.getCurrentType()== IModel.Type.CREATE && viewModel.getGame(IModel.Type.CREATE)!=null)
             createVbox.setVisible(true);
+    }
+
+    public void LoadInstance(ActionEvent actionEvent) {
+        String path="";
+            path="Created Files";
+        File file=loadInstanceFile(path);
+        if (file != null) {
+            viewModel.loadInstance(file, subSceneDisplayer.getCurrentType());
+            newMap();
+        }
+        else if (subSceneDisplayer.getCurrentType()== IModel.Type.SIMULATE && viewModel.getGame(IModel.Type.SIMULATE)!=null)
+            solBut.setVisible(true);
+
+        actionEvent.consume();
+
+    }
+
+    private File loadInstanceFile(String location) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Load Instance");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("instance files", "*"));
+        File file=checkIfExists(location);
+        fc.setInitialDirectory(file);
+        //showing the file chooser
+        return fc.showOpenDialog(null);
     }
 }

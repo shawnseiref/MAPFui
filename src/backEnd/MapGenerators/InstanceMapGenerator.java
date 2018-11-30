@@ -1,43 +1,43 @@
 package backEnd.MapGenerators;
 
 
-public class StringMapGenerator extends AMapGenerator {
+public class InstanceMapGenerator extends AMapGenerator {
+
     @Override
     public Map generate(Object o) {
-        int rowsNum = 0;
-        int colNum = 0;
+
         String mapStr = "";
         if (o instanceof String)
             mapStr = ((String) o);
         else
             return null;
-        int counter = 0;
-        counter = skipToNum(mapStr, counter);
-        rowsNum = getNum(mapStr, counter);
-        counter += (int) Math.log10(rowsNum) + 1;
-        counter = skipToNum(mapStr, counter);
-        colNum = getNum(mapStr, counter);
-        counter += Math.log10(colNum) + 6;
-        String [] rows = mapStr.substring(counter).split("\n");
-        char[][] map = new char[colNum][rowsNum];
-        for (int row = 0; row < rowsNum; row++) {
-            for (int col = 0; col < colNum; col++, counter++) {
-                map [col][row]=rows[row].charAt(col);
+        String [] splited = mapStr.split("\n");
+        String [] rowcol = splited[2].split(",");
+        int rows = extractNumber(rowcol[0]);
+        int cols = extractNumber(rowcol[1]);
+        char [][] map = new char[rows][cols];
+        for (int row = 0; row < rows && row+3<splited.length; row++) {
+            for (int col = 0; col < cols; col++) {
+                map [row][col] = splited[row+3].charAt(col);
             }
         }
-
-
-//        for (int rows = 0; rows < rowsNum; rows++) {
-//            for (int cols = 0; cols < colNum; cols++) {
-//                map[cols][rows] = mapStr.charAt(counter);
-//                counter++;
-//            }
-//        }
-//        map = cleanMap(map);
         return new Map(map);
     }
 
-    private char[][] cleanMap(char[][] map) {
+    private int extractNumber(String num) {
+        try {
+            return Integer.parseInt(num);
+        }catch (Exception e){
+            System.out.println("Couldn't read Numbers in: \""+num+"\"" );
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+
+
+   /* private char[][] cleanMap(char[][] map) {
         int row = 0, col = 0;
         boolean isVoidcol = true, isLastVoidcol = false, isVoidrow = true, isLastVoidrow = false;
         for (int i = 0; i < map.length; i++) {
@@ -65,7 +65,7 @@ public class StringMapGenerator extends AMapGenerator {
             counter++;
         }
         return counter;
-    }
+    }*/
 
 
 }
