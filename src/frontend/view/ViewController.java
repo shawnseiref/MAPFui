@@ -354,7 +354,7 @@ public class ViewController implements Observer,IView, Initializable {
             viewModel.loadInstance(file, subSceneDisplayer.getCurrentType());
             newMap();
         }
-        else if (subSceneDisplayer.getCurrentType()== IModel.Type.SIMULATE && viewModel.getGame(IModel.Type.SIMULATE)!=null)
+        if (subSceneDisplayer.getCurrentType()== IModel.Type.SIMULATE && viewModel.getGame(IModel.Type.SIMULATE)!=null)
             solBut.setVisible(true);
 
         actionEvent.consume();
