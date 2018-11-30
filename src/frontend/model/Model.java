@@ -97,10 +97,13 @@ public class Model extends Observable implements IModel {
 
     @Override
     public void generateInstance(File file, Type type) {
-        InstanceMapGenerator gen = new InstanceMapGenerator();
+        FileMapGenerator gen = new FileMapGenerator();
         generateMaze(file, type);
         simulateGame = new SubScenario(gen.generate(file));
         convertInstaceToSubScennario(file);
+        currentSolState = 0;
+        setChanged();
+        notifyObservers();
     }
 
     @Override
@@ -123,7 +126,7 @@ public class Model extends Observable implements IModel {
             BufferedReader br = new BufferedReader(new FileReader(file));
             ArrayList<String> lines = br.lines().collect(Collectors.toCollection(ArrayList::new));
             int sceneFirstRow = Integer.parseInt(lines.get(2).split(",")[0]);
-            for (int i = sceneFirstRow +3  ; i < lines.size(); i++) {
+            for (int i = sceneFirstRow +5  ; i < lines.size(); i++) {
                 String[] agentValuesString = lines.get(i).split(",");
                 simulateGame.addAgent(new Agent(Integer.parseInt(agentValuesString[0]),
                         new Position(Integer.parseInt(agentValuesString[1]),Integer.parseInt(agentValuesString[2])),
