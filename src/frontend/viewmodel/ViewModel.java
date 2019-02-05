@@ -5,13 +5,15 @@
 
 package frontend.viewmodel;
 
+import backEnd.Error.AError;
+import backEnd.Error.IError;
 import backEnd.Game.SubScenario;
 import backEnd.MapGenerators.Map;
 import backEnd.MapGenerators.Position;
 import frontend.model.IModel;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+
+import java.io.*;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -44,8 +46,9 @@ public class ViewModel extends Observable implements Observer {
         model.generateMaze(file,type);
     }
 
-    public void loadSol(File file) {
+    public boolean loadSol(File file) {
         model.loadSol(file);
+        return (model.problemWithSol()==false);
     }
 
     public SubScenario getGame(IModel.Type type) {
@@ -112,5 +115,23 @@ public class ViewModel extends Observable implements Observer {
 
     public void loadInstance(File file, IModel.Type type) {
         model.generateInstance(file,type);
+    }
+
+    public void writeErrors(File fileToSaveTo) {
+        List<AError> errors=model.getErrors();
+        FileWriter fw;
+        BufferedWriter bw;
+        try {
+            fw=new FileWriter(fileToSaveTo);
+            bw=new BufferedWriter(fw);
+            for (AError error:errors) {
+                bw.write(error.getError());
+                bw.newLine();
+            }
+            bw.flush();
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

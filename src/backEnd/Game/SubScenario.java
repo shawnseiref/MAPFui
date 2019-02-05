@@ -2,14 +2,17 @@ package backEnd.Game;
 
 import backEnd.Agents.Agent;
 import backEnd.Agents.AgentSolution;
+import backEnd.Error.AError;
 import backEnd.MapGenerators.Map;
 import backEnd.MapGenerators.Position;
 import backEnd.Solution.Solution;
+import backEnd.Solution.SolutionValidators.SimpleValidator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 public class SubScenario {
@@ -17,6 +20,7 @@ public class SubScenario {
     private ArrayList<Agent> agentsList;
     private int nextAgentID;
     private Solution sol;
+    private List<AError> errorsInSol;
 
     public SubScenario(Map map) {
         this.map = map;
@@ -37,6 +41,7 @@ public class SubScenario {
                 addAgent(aSol.getAgent());
             }
         }
+        loadErrors();
     }
 
     public SubScenario(Map map, HashMap<Position, Agent> agents) {
@@ -45,7 +50,16 @@ public class SubScenario {
         nextAgentID=agents.size();
     }
 
-    public SubScenario(Map map,File file) {
+    private void loadErrors(){
+        SimpleValidator sv=new SimpleValidator();
+        errorsInSol=sv.validateSol(this);
+    }
+
+    public List<AError> getErrorsInSol() {
+        return errorsInSol;
+    }
+
+    public SubScenario(Map map, File file) {
         this.map=map;
         String game=fileToStr(file);
         nextAgentID=0;
@@ -87,6 +101,7 @@ public class SubScenario {
             }
             newOneSol.addPosition(nextPos);
         }
+        loadErrors();
     }
 
     public Solution getSol() {
@@ -137,5 +152,11 @@ public class SubScenario {
         }
         in.close();
         return sb.toString();
+    }
+
+    public boolean problemWithSol() {
+        if(errorsInSol==null || errorsInSol.size()==0)
+            return false;
+        return true;
     }
 }

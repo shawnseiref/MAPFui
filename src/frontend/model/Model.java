@@ -2,15 +2,18 @@ package frontend.model;
 
 import backEnd.Agents.Agent;
 import backEnd.Agents.AgentSolution;
+import backEnd.Error.AError;
 import backEnd.Game.SubScenario;
 import backEnd.MapGenerators.*;
 import backEnd.Solution.Solution;
+import backEnd.Solution.SolutionValidators.SimpleValidator;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -64,6 +67,11 @@ public class Model extends Observable implements IModel {
             return createGame.getMap();
         else
             return simulateGame.getMap();    }
+
+    @Override
+    public List<AError> getErrors() {
+        return simulateGame.getErrorsInSol();
+    }
 
     @Override
     public void generateMaze(int width, int height, double percentage) {
@@ -220,6 +228,11 @@ public class Model extends Observable implements IModel {
             return false;
         }
         return validLoc(pos);
+    }
+
+    @Override
+    public boolean problemWithSol() {
+        return simulateGame.problemWithSol();
     }
 
     private boolean validLoc(Position pos){

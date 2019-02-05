@@ -22,6 +22,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -92,7 +93,18 @@ public class ViewController implements Observer,IView, Initializable {
         File file=loadSolFile("");
         if(file!=null){
             subSceneDisplayer.currentStateZero();
-            viewModel.loadSol(file);
+            if(viewModel.loadSol(file)==false){
+                if(showConfirmation("There are errors in the solution\nDo you want to save the errors to log file?")){
+                    FileChooser fc=new FileChooser();
+                    fc.setTitle("Choose location To Save Report");
+                    fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files",".txt"));
+                    File fileToSaveTo=fc.showSaveDialog(subSceneDisplayer.getScene().getWindow());
+                    viewModel.writeErrors(fileToSaveTo);
+                }
+            }
+            else{
+                showAlert("No errors were found in the solution!");
+            }
             controlVbox.setVisible(true);
         }
         event.consume();
@@ -203,6 +215,13 @@ public class ViewController implements Observer,IView, Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText(alertMessage);
         alert.show();
+    }
+
+    public boolean showConfirmation(String alertMessage) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText(alertMessage);
+        Optional<ButtonType> result = alert.showAndWait();
+        return (result.get()==ButtonType.OK);
     }
 
     @Override

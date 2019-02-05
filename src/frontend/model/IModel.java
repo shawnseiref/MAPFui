@@ -1,10 +1,12 @@
 package frontend.model;
 
+import backEnd.Error.AError;
 import backEnd.Game.SubScenario;
 import backEnd.MapGenerators.Map;
 import backEnd.MapGenerators.Position;
 
 import java.io.File;
+import java.util.List;
 
 public interface IModel {
 
@@ -20,6 +22,7 @@ public interface IModel {
     void moveState(int j,int i);
     SubScenario getGame(Type type);
     Map getMap(Type type);
+    List<AError> getErrors();
     void generateMaze(int width, int height,double percentage);
     void generateMaze(File str,Type type);
     void generateMaze(String str,Type type);
@@ -30,4 +33,6 @@ public interface IModel {
     String getScensStr(String name);
     boolean validStart(Position pos);
     boolean validGoal(Position pos);
+    boolean problemWithSol();
+
 }

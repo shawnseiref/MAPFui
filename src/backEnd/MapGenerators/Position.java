@@ -85,4 +85,16 @@ public class Position {
     public int hashcode() {
         return (((x + y) * (x + y + 1)) / 2) + x;
     }
+
+    public boolean isSimpleNeighbor(Position pos){
+        if((Math.abs(pos.getX()-this.x)+Math.abs(pos.getY()-this.y))==1)
+            return true;
+        return false;
+    }
+
+    public boolean isComplexNeighbor(Position pos){
+        if((Math.abs(pos.getX()-this.x)+Math.abs(pos.getY()-this.y))==2)
+            return true;
+        return false;
+    }
 }

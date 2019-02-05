@@ -18,7 +18,7 @@ public class EdgeConflict extends AConflict {
 
     @Override
     public String getError() {
-        String ans="Vertex Conflict: ";
+        String ans="Edge Conflict: ";
         ans=ans+getAgentsIDs();
         ans=ans+" go from "+firstConflictPos.toString()+" to "+secondConflictPos.toString()+" (or the opposite) at "+timeStamp+" timeStamp";
         return ans;
