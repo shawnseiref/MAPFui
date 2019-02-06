@@ -36,10 +36,11 @@ public class ViewModel extends Observable implements Observer {
         return model.getMap(type);
     }
 
-    public void addAgent(Position start, Position goal,IModel.Type type) {
-        model.addAgent(start, goal,type);
+    public boolean addAgent(Position start, Position goal,IModel.Type type) {
+        boolean ans=model.addAgent(start, goal,type);
         setChanged();
         notifyObservers();
+        return ans;
     }
 
     public void loadMap(File file,IModel.Type type) {
@@ -133,5 +134,14 @@ public class ViewModel extends Observable implements Observer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean randomAgent() {
+        if(model.randomAgent()){
+            setChanged();
+            notifyObservers();
+            return true;
+        }
+        return false;
     }
 }

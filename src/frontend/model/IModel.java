@@ -12,6 +12,7 @@ public interface IModel {
 
     void randomMap(double[] arr);
 
+    boolean randomAgent();
 
 
     public enum Type {
@@ -28,7 +29,7 @@ public interface IModel {
     void generateMaze(String str,Type type);
     void generateInstance(File file, Type type);
     void moveCharacter(Position current,Position target);
-    void addAgent(Position start, Position goal,Type type);
+    boolean addAgent(Position start, Position goal, Type type);
     String getMapStr();
     String getScensStr(String name);
     boolean validStart(Position pos);

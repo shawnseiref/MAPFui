@@ -71,17 +71,17 @@ public class ViewController implements Observer,IView, Initializable {
         this.viewModel = viewModel;
     }
 
+    public void randomAgent(ActionEvent actionEvent){
+        if(!viewModel.randomAgent())
+            showAlert("There is no place left for another agent");
+        actionEvent.consume();
+    }
+
     public void addAgent(ActionEvent actionEvent){
-        try{
-            Position start=new Position(Integer.parseInt(startRow.getText()),Integer.parseInt(startCol.getText()));
-            Position goal=new Position(Integer.parseInt(goalRow.getText()),Integer.parseInt(goalCol.getText()));
-            Map map=viewModel.getMap(IModel.Type.CREATE);
-            if(!map.posExists(start) || !map.posExists(goal) || !map.posReachable(start) || !map.posReachable(goal))
-                throw new Exception();
-            viewModel.addAgent(start,goal, IModel.Type.CREATE);
-        }
-        catch (Exception e){
-            showAlert("Agent's position must be a reachable location in the map");
+        Position start=new Position(Integer.parseInt(startRow.getText()),Integer.parseInt(startCol.getText()));
+        Position goal=new Position(Integer.parseInt(goalRow.getText()),Integer.parseInt(goalCol.getText()));
+        if(!viewModel.addAgent(start,goal, IModel.Type.CREATE)){
+            showAlert("Agent's position is unreachable or taken");
         }
         startRow.clear();
         startCol.clear();

@@ -6,7 +6,6 @@ import backEnd.Error.AError;
 import backEnd.Game.SubScenario;
 import backEnd.MapGenerators.*;
 import backEnd.Solution.Solution;
-import backEnd.Solution.SolutionValidators.SimpleValidator;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Model extends Observable implements IModel {
 
@@ -32,6 +30,24 @@ public class Model extends Observable implements IModel {
         currentSolState = 0;
         setChanged();
         notifyObservers();
+    }
+
+    @Override
+    public boolean randomAgent() {
+        int width=createGame.getMap().getWidth();
+        int height=createGame.getMap().getHeight();
+        Position startPos;
+        Position goalPos;
+        Map map=createGame.getMap();
+        double time=System.currentTimeMillis();
+        do{
+            if(System.currentTimeMillis()-time>5000)
+                return false;
+            startPos=new Position((int)(Math.random()*height),(int)(Math.random()*width));
+            goalPos=new Position((int)(Math.random()*height),(int)(Math.random()*width));
+        }
+        while(!addAgent(startPos,goalPos,Type.CREATE));
+        return true;
     }
 
     @Override
@@ -122,11 +138,20 @@ public class Model extends Observable implements IModel {
     }
 
     @Override
-    public void addAgent(Position start, Position goal, Type type) {
+    public boolean addAgent(Position startPos, Position goalPos, Type type) {
+        Map map;
         if (type == Type.CREATE)
-            createGame.addAgent(new Agent(createGame.getNextAgentID(), start, goal));
+            map=createGame.getMap();
         else
-            simulateGame.addAgent(new Agent(simulateGame.getNextAgentID(), start, goal));
+            map=simulateGame.getMap();
+        if(!map.posReachable(startPos) || !map.posReachable(goalPos) || !createGame.startPosFree(startPos) || !createGame.goalPosFree(goalPos)){
+            return false;
+        }
+        if (type == Type.CREATE)
+            createGame.addAgent(new Agent(createGame.getNextAgentID(), startPos, goalPos));
+        else
+            simulateGame.addAgent(new Agent(simulateGame.getNextAgentID(), startPos, goalPos));
+        return true;
     }
 
     private void convertInstaceToSubScennario(File file) {

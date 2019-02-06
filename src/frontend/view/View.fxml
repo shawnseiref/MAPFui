@@ -23,7 +23,7 @@
 
 <!--xmlns="http://javafx.com/javafx/8.0.121"-->
 
-<BorderPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.view.ViewController">
+<BorderPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.view.ViewController">
     <left>
       <VBox prefHeight="0.0" prefWidth="266.0" BorderPane.alignment="CENTER">
          <children>
@@ -35,7 +35,7 @@
                                   <left>
                                       <VBox fx:id="createVbox" prefHeight="524.0" prefWidth="264.0" BorderPane.alignment="CENTER">
                                           <children>
-                                              <GridPane prefHeight="109.0" prefWidth="264.0">
+                                              <GridPane prefHeight="164.0" prefWidth="264.0">
                                                   <columnConstraints>
                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="229.0" minWidth="10.0" prefWidth="139.0" />
                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="177.0" minWidth="10.0" prefWidth="51.0" />
@@ -44,8 +44,9 @@
                                                   <rowConstraints>
                                                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="29.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="27.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
                                                   </rowConstraints>
                                                   <children>
                                                       <Label prefHeight="21.0" prefWidth="143.0" text="Agent start position:" />
@@ -55,8 +56,9 @@
                                                       <TextField fx:id="goalRow" prefHeight="31.0" prefWidth="65.0" promptText="Row" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                       <TextField fx:id="startCol" promptText="Column" GridPane.columnIndex="2" />
                                                       <TextField fx:id="goalCol" promptText="Column" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                          <Button mnemonicParsing="false" onAction="#save" prefHeight="31.0" prefWidth="154.0" text="Save" GridPane.rowIndex="3" />
-                                          <TextField fx:id="fileName" alignment="CENTER" promptText="File Name" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                          <Button mnemonicParsing="false" onAction="#save" prefHeight="31.0" prefWidth="154.0" text="Save" GridPane.rowIndex="4" />
+                                          <TextField fx:id="fileName" alignment="CENTER" promptText="File Name" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                                          <Button mnemonicParsing="false" onAction="#randomAgent" prefHeight="19.0" prefWidth="264.0" text="Add random Agent" GridPane.columnSpan="3" GridPane.rowIndex="3" />
                                                   </children>
                                               </GridPane>
                                           </children>

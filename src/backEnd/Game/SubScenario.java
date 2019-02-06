@@ -159,4 +159,20 @@ public class SubScenario {
             return false;
         return true;
     }
+
+    public boolean startPosFree(Position position){
+        for (Agent agent:agentsList) {
+            if(agent.getLocation().equals(position))
+                return false;
+        }
+        return true;
+    }
+
+    public boolean goalPosFree(Position position){
+        for (Agent agent:agentsList) {
+            if(agent.getGoalLocation().equals(position))
+                return false;
+        }
+        return true;
+    }
 }
