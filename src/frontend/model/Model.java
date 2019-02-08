@@ -2,6 +2,7 @@ package frontend.model;
 
 import backEnd.Agents.Agent;
 import backEnd.Agents.AgentSolution;
+import backEnd.Error.AError;
 import backEnd.Game.SubScenario;
 import backEnd.MapGenerators.*;
 import backEnd.Solution.Solution;
@@ -11,9 +12,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Model extends Observable implements IModel {
 
@@ -29,6 +30,35 @@ public class Model extends Observable implements IModel {
         currentSolState = 0;
         setChanged();
         notifyObservers();
+    }
+
+    @Override
+    public boolean randomAgent() {
+        int width=createGame.getMap().getWidth();
+        int height=createGame.getMap().getHeight();
+        Position startPos;
+        Position goalPos;
+        Map map=createGame.getMap();
+        double time=System.currentTimeMillis();
+        do{
+            if(System.currentTimeMillis()-time>5000)
+                return false;
+            startPos=new Position((int)(Math.random()*height),(int)(Math.random()*width));
+            goalPos=new Position((int)(Math.random()*height),(int)(Math.random()*width));
+        }
+        while(!addAgent(startPos,goalPos,Type.CREATE));
+        return true;
+    }
+
+    @Override
+    public boolean checkSol(File file) {
+        Solution sol=new Solution(file);
+        ArrayList<Agent> a=simulateGame.getAgentsList();
+        ArrayList<Agent> b=sol.getAgents();
+        if(a!=null && b!=null && a.size()==b.size())
+            return a.equals(b);
+        else
+            return false;
     }
 
     @Override
@@ -64,6 +94,11 @@ public class Model extends Observable implements IModel {
             return createGame.getMap();
         else
             return simulateGame.getMap();    }
+
+    @Override
+    public List<AError> getErrors() {
+        return simulateGame.getErrorsInSol();
+    }
 
     @Override
     public void generateMaze(int width, int height, double percentage) {
@@ -114,11 +149,20 @@ public class Model extends Observable implements IModel {
     }
 
     @Override
-    public void addAgent(Position start, Position goal, Type type) {
+    public boolean addAgent(Position startPos, Position goalPos, Type type) {
+        Map map;
         if (type == Type.CREATE)
-            createGame.addAgent(new Agent(createGame.getNextAgentID(), start, goal));
+            map=createGame.getMap();
         else
-            simulateGame.addAgent(new Agent(simulateGame.getNextAgentID(), start, goal));
+            map=simulateGame.getMap();
+        if(!map.posReachable(startPos) || !map.posReachable(goalPos) || !createGame.startPosFree(startPos) || !createGame.goalPosFree(goalPos)){
+            return false;
+        }
+        if (type == Type.CREATE)
+            createGame.addAgent(new Agent(createGame.getNextAgentID(), startPos, goalPos));
+        else
+            simulateGame.addAgent(new Agent(simulateGame.getNextAgentID(), startPos, goalPos));
+        return true;
     }
 
     private void convertInstaceToSubScennario(File file) {
@@ -220,6 +264,13 @@ public class Model extends Observable implements IModel {
             return false;
         }
         return validLoc(pos);
+    }
+
+    @Override
+    public boolean problemWithSol(File file) {
+        Solution sol=new Solution(file);
+        SubScenario test=new SubScenario(simulateGame.getMap(),sol);
+        return test.problemWithSol();
     }
 
     private boolean validLoc(Position pos){

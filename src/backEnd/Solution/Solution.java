@@ -110,4 +110,12 @@ public class Solution {
     public void removeSolution(AgentSolution sol) {
         agentsSolutions.remove(sol);
     }
+
+    public ArrayList<Agent> getAgents(){
+        ArrayList<Agent> ans=new ArrayList<>();
+        for (AgentSolution as:agentsSolutions) {
+            ans.add(as.getAgent());
+        }
+        return ans;
+    }
 }

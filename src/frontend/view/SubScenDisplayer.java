@@ -154,7 +154,7 @@ public class SubScenDisplayer extends Canvas {
         int stringSize = Math.max(10, (int) cellSize / 5);
         gc.setFont(new Font(stringSize));
         gc.setFill(Color.BLACK);
-        gc.fillText(botNum + "", x * cellSize + cellSize / 2 - stringSize * 0.45 * ((int) Math.log10(botNum + 1) + 1), y * cellSize + cellSize / 2 + stringSize * 0.45, cellSize);
+        drawNum(x,y,botNum,gc);
     }
 
     private void drawAgents(GraphicsContext gc) {
@@ -169,12 +169,21 @@ public class SubScenDisplayer extends Canvas {
         gc.setFill(drawNum? getColor(botNum): Color.RED);
         gc.fillOval(x * cellSize, y * cellSize, cellSize, cellSize);
         if (drawNum) {
-            int stringSize = Math.max(10, (int) cellSize / 5);
-            gc.setFont(new Font(stringSize));
             gc.setFill(Color.WHITE);
-            gc.fillText(botNum + "", x * cellSize + cellSize / 2 - stringSize * 0.45 * ((int) Math.log10(botNum + 1) + 1), y * cellSize + cellSize / 2 + stringSize * 0.45, cellSize);
+            drawNum(x,y,botNum,gc);
         }
     }
+
+    private void drawNum(int x, int y, int botNum, GraphicsContext gc) {
+        int numSize = (int) (Math.log10(botNum==0?1:botNum)+1);
+        double alpha=Math.sqrt(2);
+        int stringSize = (int) ((Math.sqrt(2)*cellSize)/(alpha));
+        double stringY=cellSize/(alpha);
+        double stringX=stringY*3/4;
+        gc.setFont(new Font(stringSize));
+        gc.fillText(botNum + "", x * cellSize + 0.5*(cellSize-stringX), y * cellSize + cellSize-0.5*(cellSize-stringY), cellSize/numSize);
+    }
+
 
     public void drawTempAgent(int x, int y) {
         drawAgent(x, y, 0, false, getGraphicsContext2D());
@@ -183,8 +192,8 @@ public class SubScenDisplayer extends Canvas {
 
 
     private void drawGrid(GraphicsContext gc) {
-        gc.setLineWidth(1); // change the line width
         char[][] grid = game.getMap().getGrid();
+        gc.setLineWidth(Math.max(Math.min(1,cellSize-1),0)); // change the line width
 
         int hLineCount = (int) Math.floor(grid[0].length+1);
         int vLineCount = (int) Math.floor(grid.length+1);

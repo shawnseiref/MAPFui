@@ -5,13 +5,14 @@
 
 package frontend.viewmodel;
 
+import backEnd.Error.AError;
 import backEnd.Game.SubScenario;
 import backEnd.MapGenerators.Map;
 import backEnd.MapGenerators.Position;
 import frontend.model.IModel;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+
+import java.io.*;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -34,18 +35,20 @@ public class ViewModel extends Observable implements Observer {
         return model.getMap(type);
     }
 
-    public void addAgent(Position start, Position goal,IModel.Type type) {
-        model.addAgent(start, goal,type);
+    public boolean addAgent(Position start, Position goal,IModel.Type type) {
+        boolean ans=model.addAgent(start, goal,type);
         setChanged();
         notifyObservers();
+        return ans;
     }
 
     public void loadMap(File file,IModel.Type type) {
         model.generateMaze(file,type);
     }
 
-    public void loadSol(File file) {
+    public boolean loadSol(File file) {
         model.loadSol(file);
+        return (model.problemWithSol(file)==false);
     }
 
     public SubScenario getGame(IModel.Type type) {
@@ -112,5 +115,40 @@ public class ViewModel extends Observable implements Observer {
 
     public void loadInstance(File file, IModel.Type type) {
         model.generateInstance(file,type);
+    }
+
+    public void writeErrors(File fileToSaveTo) {
+        List<AError> errors=model.getErrors();
+        FileWriter fw;
+        BufferedWriter bw;
+        try {
+            fw=new FileWriter(fileToSaveTo);
+            bw=new BufferedWriter(fw);
+            for (AError error:errors) {
+                bw.write(error.getError());
+                bw.newLine();
+            }
+            bw.flush();
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean randomAgent() {
+        if(model.randomAgent()){
+            setChanged();
+            notifyObservers();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkSol(File file) {
+        return model.checkSol(file);
+    }
+
+    public boolean problemsInSol(File file) {
+        return model.problemWithSol(file);
     }
 }

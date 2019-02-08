@@ -22,6 +22,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -70,17 +71,17 @@ public class ViewController implements Observer,IView, Initializable {
         this.viewModel = viewModel;
     }
 
+    public void randomAgent(ActionEvent actionEvent){
+        if(!viewModel.randomAgent())
+            showAlert("There is no place left for another agent");
+        actionEvent.consume();
+    }
+
     public void addAgent(ActionEvent actionEvent){
-        try{
-            Position start=new Position(Integer.parseInt(startRow.getText()),Integer.parseInt(startCol.getText()));
-            Position goal=new Position(Integer.parseInt(goalRow.getText()),Integer.parseInt(goalCol.getText()));
-            Map map=viewModel.getMap(IModel.Type.CREATE);
-            if(!map.posExists(start) || !map.posExists(goal) || !map.posReachable(start) || !map.posReachable(goal))
-                throw new Exception();
-            viewModel.addAgent(start,goal, IModel.Type.CREATE);
-        }
-        catch (Exception e){
-            showAlert("Agent's position must be a reachable location in the map");
+        Position start=new Position(Integer.parseInt(startRow.getText()),Integer.parseInt(startCol.getText()));
+        Position goal=new Position(Integer.parseInt(goalRow.getText()),Integer.parseInt(goalCol.getText()));
+        if(!viewModel.addAgent(start,goal, IModel.Type.CREATE)){
+            showAlert("Agent's position is unreachable or taken");
         }
         startRow.clear();
         startCol.clear();
@@ -90,9 +91,30 @@ public class ViewController implements Observer,IView, Initializable {
 
     public void loadSol(ActionEvent event){
         File file=loadSolFile("");
+        boolean load=true;
         if(file!=null){
             subSceneDisplayer.currentStateZero();
-            viewModel.loadSol(file);
+            // TODO: 08-Feb-19 chane the load map to load instance and then apply this comments
+//            if(viewModel.checkSol(file)==false){
+//                load=false;
+//                showAlert("The solution does not matches the current map , operation canceled!");
+//            }
+//            else
+                if(viewModel.problemsInSol(file)==true){
+                    if(showConfirmation("There are errors in the solution\nDo you want to save the errors to log file?")){
+                        FileChooser fc=new FileChooser();
+                        fc.setTitle("Choose location To Save Report");
+                        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files",".txt"));
+                        File fileToSaveTo=fc.showSaveDialog(subSceneDisplayer.getScene().getWindow());
+                        viewModel.writeErrors(fileToSaveTo);
+                    }
+                    load=showConfirmation("Do you want to load the solution anyway?");
+                }
+            else{
+                showAlert("No errors were found in the solution!");
+            }
+            if(load)
+                viewModel.loadSol(file);
             controlVbox.setVisible(true);
         }
         event.consume();
@@ -203,6 +225,13 @@ public class ViewController implements Observer,IView, Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText(alertMessage);
         alert.show();
+    }
+
+    public boolean showConfirmation(String alertMessage) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText(alertMessage);
+        Optional<ButtonType> result = alert.showAndWait();
+        return (result.get()==ButtonType.OK);
     }
 
     @Override
