@@ -51,6 +51,17 @@ public class Model extends Observable implements IModel {
     }
 
     @Override
+    public boolean checkSol(File file) {
+        Solution sol=new Solution(file);
+        ArrayList<Agent> a=simulateGame.getAgentsList();
+        ArrayList<Agent> b=sol.getAgents();
+        if(a!=null && b!=null && a.size()==b.size())
+            return a.equals(b);
+        else
+            return false;
+    }
+
+    @Override
     public void loadSol(File file) {
         Solution sol=new Solution(file);
         simulateGame=new SubScenario(simulateGame.getMap(),sol);
@@ -256,8 +267,10 @@ public class Model extends Observable implements IModel {
     }
 
     @Override
-    public boolean problemWithSol() {
-        return simulateGame.problemWithSol();
+    public boolean problemWithSol(File file) {
+        Solution sol=new Solution(file);
+        SubScenario test=new SubScenario(simulateGame.getMap(),sol);
+        return test.problemWithSol();
     }
 
     private boolean validLoc(Position pos){

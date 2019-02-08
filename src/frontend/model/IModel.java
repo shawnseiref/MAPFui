@@ -14,6 +14,8 @@ public interface IModel {
 
     boolean randomAgent();
 
+    boolean checkSol(File file);
+
 
     public enum Type {
         CREATE,SIMULATE;
@@ -34,6 +36,6 @@ public interface IModel {
     String getScensStr(String name);
     boolean validStart(Position pos);
     boolean validGoal(Position pos);
-    boolean problemWithSol();
+    boolean problemWithSol(File file);
 
 }

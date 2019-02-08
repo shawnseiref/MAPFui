@@ -91,20 +91,30 @@ public class ViewController implements Observer,IView, Initializable {
 
     public void loadSol(ActionEvent event){
         File file=loadSolFile("");
+        boolean load=true;
         if(file!=null){
             subSceneDisplayer.currentStateZero();
-            if(viewModel.loadSol(file)==false){
-                if(showConfirmation("There are errors in the solution\nDo you want to save the errors to log file?")){
-                    FileChooser fc=new FileChooser();
-                    fc.setTitle("Choose location To Save Report");
-                    fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files",".txt"));
-                    File fileToSaveTo=fc.showSaveDialog(subSceneDisplayer.getScene().getWindow());
-                    viewModel.writeErrors(fileToSaveTo);
+            // TODO: 08-Feb-19 chane the load map to load instance and then apply this comments 
+//            if(viewModel.checkSol(file)==false){
+//                load=false;
+//                showAlert("The solution does not matches the current map , operation canceled!");
+//            }
+//            else
+                if(viewModel.problemsInSol(file)==true){
+                    if(showConfirmation("There are errors in the solution\nDo you want to save the errors to log file?")){
+                        FileChooser fc=new FileChooser();
+                        fc.setTitle("Choose location To Save Report");
+                        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files",".txt"));
+                        File fileToSaveTo=fc.showSaveDialog(subSceneDisplayer.getScene().getWindow());
+                        viewModel.writeErrors(fileToSaveTo);
+                    }
+                    load=showConfirmation("Do you want to load the solution anyway?");
                 }
-            }
             else{
                 showAlert("No errors were found in the solution!");
             }
+            if(load)
+                viewModel.loadSol(file);
             controlVbox.setVisible(true);
         }
         event.consume();

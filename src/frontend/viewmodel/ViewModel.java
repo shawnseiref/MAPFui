@@ -6,7 +6,6 @@
 package frontend.viewmodel;
 
 import backEnd.Error.AError;
-import backEnd.Error.IError;
 import backEnd.Game.SubScenario;
 import backEnd.MapGenerators.Map;
 import backEnd.MapGenerators.Position;
@@ -49,7 +48,7 @@ public class ViewModel extends Observable implements Observer {
 
     public boolean loadSol(File file) {
         model.loadSol(file);
-        return (model.problemWithSol()==false);
+        return (model.problemWithSol(file)==false);
     }
 
     public SubScenario getGame(IModel.Type type) {
@@ -143,5 +142,13 @@ public class ViewModel extends Observable implements Observer {
             return true;
         }
         return false;
+    }
+
+    public boolean checkSol(File file) {
+        return model.checkSol(file);
+    }
+
+    public boolean problemsInSol(File file) {
+        return model.problemWithSol(file);
     }
 }

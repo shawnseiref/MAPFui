@@ -15,6 +15,16 @@ import java.util.HashSet;
 import java.util.List;
 
 public class SimpleValidator extends ASolutionValidator {
+
+//    public boolean isSuitableSolution(SubScenario scene){
+//        Map map=scene.getMap();
+//        Solution sol=scene.getSol();
+//        List<Agent> agents=scene.getAgentsList();
+//        ArrayList<AgentSolution> agentSolutions=sol.getAgentsSolutions();
+//        if()
+//        return true;
+//    }
+
     public ArrayList<AError> validateSol(SubScenario scene) {
         ArrayList<AError> ans=new ArrayList<>();
         HashMap<Position,ArrayList<Agent>> currentPositions;//to checks conflict
@@ -22,7 +32,6 @@ public class SimpleValidator extends ASolutionValidator {
         Solution sol=scene.getSol();
         List<Agent> agents=scene.getAgentsList();
         ArrayList<AgentSolution> agentSolutions=sol.getAgentsSolutions();
-        Position[][] array=new Position[agents.size()][sol.getSolLength()];
         for (int j=1;j<sol.getSolLength();j++) {
             currentPositions = new HashMap<>();
             for (int i = 0; i < agents.size(); i++) {
@@ -60,7 +69,7 @@ public class SimpleValidator extends ASolutionValidator {
                 PosAgentList.add(agents.get(i));
                 currentPositions.put(currentPos,PosAgentList);
                 //check EdgeConflict
-                for (int t = i+1; t < array.length; t++) {
+                for (int t = i+1; t < agents.size(); t++) {
                     Position testedPreviousPos = agentSolutions.get(t).getPath().get(j-1);
                     Position testedCurrentPos = agentSolutions.get(t).getPath().get(j);
                     if (previousPos.equals(testedCurrentPos) && currentPos.equals(testedPreviousPos)) {
